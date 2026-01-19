@@ -545,9 +545,8 @@
     </main>
 
     <script>
-        // CONFIGURAÇÃO DOS LINKS GOOGLE SHEETS (CSV PUBLICADO)
-        // Usando proxy para evitar bloqueio CORS no GitHub Pages
-        const PROXY_URL = 'https://api.allorigins.win/raw?url=';
+        // CONFIGURAÇÃO DOS LINKS REAIS
+        // Removido o Proxy para conexão direta (mais rápido e estável com CSV publicado)
         const SHEET_URLS = {
             JUL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=772320362&single=true&output=csv',
             AGO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=401963441&single=true&output=csv',
@@ -557,6 +556,7 @@
             DEZ: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=36750990&single=true&output=csv',
             ACAO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=410178243&single=true&output=csv',
             IND: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1794727193&single=true&output=csv'
+            // Adicione aqui os links BANT, CONVERTED e SCALINK quando tiver
         };
 
         const MASTERS_LIST = [
@@ -582,7 +582,7 @@
             try {
                 const promises = keys.map(async (key) => {
                     loadingText.innerText = `Baixando planilha: ${key}...`;
-                    const finalUrl = PROXY_URL + encodeURIComponent(SHEET_URLS[key]);
+                    const finalUrl = SHEET_URLS[key]; // Conexão Direta
                     const data = await fetchCSV(finalUrl, key);
                     return data.map(row => normalizeData(row, key));
                 });
@@ -600,7 +600,7 @@
 
             } catch (error) {
                 console.error(error);
-                loadingText.innerText = 'Erro ao carregar dados. Verifique o console.';
+                loadingText.innerText = 'Erro ao carregar. Verifique sua conexão.';
                 loadingText.style.color = 'red';
             }
         }
@@ -618,6 +618,7 @@
             if (lines.length < 2) return [];
             const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
             return lines.slice(1).map(line => {
+                // Regex aprimorado para CSV
                 const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
                 if(!values) return null;
                 const obj = {};
@@ -691,7 +692,7 @@
             const dateEnd = document.getElementById('inputDateEnd').value;
 
             const filtered = masterDB.filter(item => {
-                // Filtro de Data
+                // Filtro de Data (Opcional)
                 if(dateStart && dateEnd && item.createdAt) {
                     if(item.createdAt < dateStart || item.createdAt > dateEnd) return false;
                 }
@@ -775,7 +776,7 @@
             document.getElementById('kpi-sca-total').innerText = scaData.length;
             document.getElementById('sca-list-count').innerText = scaData.length;
             
-            // Render Scalink List
+            // Render Scalink List (Placeholder)
             document.getElementById('scalink-list-body').innerHTML = scaData.map((i, idx) => `
                 <tr style="border-bottom:1px solid #222; font-size:0.75rem;"><td style="padding:10px; width:30px;">${idx+1}.</td><td>${i.name}</td><td style="color:#888;">${i.email}</td><td style="text-align:right;">${i.uf}</td></tr>
             `).join('');
