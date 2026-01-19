@@ -25,6 +25,11 @@
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--purple); }
 
+        /* LOADING OVERLAY */
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid var(--cyan); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         /* SIDEBAR */
         .sidebar { width: 280px; background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; }
         .brand { padding: 0 20px 30px; display: flex; align-items: center; gap: 10px; font-family: 'Orbitron', sans-serif; color: var(--cyan); font-size: 1rem; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 242, 255, 0.3); }
@@ -46,8 +51,6 @@
         /* MAIN */
         .main-content { flex: 1; overflow-y: auto; padding: 30px; background: radial-gradient(circle at 10% 10%, #100520 0%, #05020a 100%); display: flex; flex-direction: column; }
         
-        .design-mode-banner { background: linear-gradient(90deg, #ff9100, #ff0055); color: white; padding: 5px 10px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; border-radius: 4px; display: inline-block; margin-bottom: 20px; width: fit-content; font-family: 'Orbitron'; letter-spacing: 1px; }
-
         /* FILTROS */
         .filters-container { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
         .filter-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 130px; }
@@ -100,15 +103,26 @@
         .scalink-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .scalink-title { font-size: 1.8rem; font-family: 'Inter'; font-weight: bold; color: white; text-align: center; width: 100%; }
         .scalink-kpi { background: #000; border: 1px solid var(--yellow); border-radius: 6px; padding: 10px 20px; width: 120px; text-align: center; }
+        .scalink-kpi-title { color: var(--yellow); font-size: 0.65rem; margin-bottom: 5px; }
+        .scalink-kpi-val { color: var(--yellow); font-size: 1.5rem; font-family: 'Orbitron'; font-weight: bold; }
+        
         .scalink-table-container { background: #000; border: 1px solid #333; margin-bottom: 20px; border-radius: 4px; overflow: hidden; }
         .scalink-table th { background: #000; color: var(--yellow); border-bottom: 1px solid #333; font-size: 0.7rem; padding: 10px; text-align: center; }
         .scalink-table td { text-align: center; padding: 8px; font-size: 0.8rem; border-bottom: 1px solid #222; }
         .scalink-row-inactive { background: #8b0000; color: white; }
         .scalink-row-active { background: #2e7d32; color: white; }
         .scalink-row-total { background: #000; color: white; font-weight: bold; }
+
         .scalink-split-view { display: flex; gap: 20px; height: 500px; }
         .scalink-col { flex: 1; background: #000; border: 1px solid #333; border-radius: 4px; display: flex; flex-direction: column; }
+        .scalink-col-header { padding: 10px; background: #000; color: var(--yellow); font-weight: bold; border-bottom: 1px solid #333; text-align: right; font-size: 0.8rem; }
         
+        .bar-row { display: flex; align-items: center; padding: 8px 10px; border-bottom: 1px solid #111; font-size: 0.8rem; }
+        .bar-label { width: 40px; color: #fff; }
+        .bar-track { flex: 1; background: #222; height: 20px; margin: 0 10px; position: relative; }
+        .bar-fill { height: 100%; background: #ccc; display: block; }
+        .bar-val { width: 30px; text-align: right; color: #ccc; }
+
         /* TAGS */
         .tag-source { font-size: 0.65rem; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; font-weight: 700; margin-right: 8px; display: inline-block; min-width: 50px; text-align: center; letter-spacing: 0.5px; box-shadow: 0 0 5px rgba(0,0,0,0.3); }
         .tag-jul { border: 1px solid #ff0055; color: #ff0055; background: rgba(255, 0, 85, 0.05); }
@@ -132,6 +146,12 @@
     </style>
 </head>
 <body>
+    
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <div style="font-family:'Orbitron'; color:var(--cyan); letter-spacing:2px;">CONECTANDO BASES...</div>
+        <div id="loading-text" style="color:#666; font-size:0.8rem; margin-top:10px;">Iniciando integração segura</div>
+    </div>
 
     <aside class="sidebar">
         <div class="brand"><i class="fas fa-chart-line"></i> V4 | SCALINK</div>
@@ -172,10 +192,6 @@
 
     <main class="main-content">
         
-        <div class="design-mode-banner">
-            <i class="fas fa-paint-brush"></i> MODO DESIGN: DADOS FICTÍCIOS
-        </div>
-
         <div class="filters-container">
             <div class="filter-group">
                 <label>Data Início</label>
@@ -238,7 +254,15 @@
                 <label>Estado (UF)</label>
                 <select id="selectUF" class="filter-input">
                     <option value="">Todos</option>
-                    <option>SP</option><option>MG</option><option>RJ</option><option>BA</option><option>RS</option><option>PR</option><option>SC</option><option>PE</option><option>DF</option><option>GO</option>
+                    <option value="AC">AC</option><option value="AL">AL</option><option value="AP">AP</option>
+                    <option value="AM">AM</option><option value="BA">BA</option><option value="CE">CE</option>
+                    <option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option>
+                    <option value="MA">MA</option><option value="MT">MT</option><option value="MS">MS</option>
+                    <option value="MG">MG</option><option value="PA">PA</option><option value="PB">PB</option>
+                    <option value="PR">PR</option><option value="PE">PE</option><option value="PI">PI</option>
+                    <option value="RJ">RJ</option><option value="RN">RN</option><option value="RS">RS</option>
+                    <option value="RO">RO</option><option value="RR">RR</option><option value="SC">SC</option>
+                    <option value="SP">SP</option><option value="SE">SE</option><option value="TO">TO</option>
                 </select>
             </div>
             <div class="filter-group">
@@ -277,14 +301,12 @@
             <div class="overview-grid">
                 <div class="card">
                     <div class="card-header">Distribuição por Origem</div>
-                    <div class="chart-container" id="chart-origin">
-                        </div>
+                    <div class="chart-container" id="chart-origin"></div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">Saúde da Base (Status)</div>
-                    <div class="chart-container" id="chart-status">
-                        </div>
+                    <div class="chart-container" id="chart-status"></div>
                 </div>
             </div>
         </section>
@@ -523,7 +545,20 @@
     </main>
 
     <script>
-        // LISTA COMPLETA
+        // CONFIGURAÇÃO DOS LINKS GOOGLE SHEETS (CSV PUBLICADO)
+        // Usando proxy para evitar bloqueio CORS no GitHub Pages
+        const PROXY_URL = 'https://api.allorigins.win/raw?url=';
+        const SHEET_URLS = {
+            JUL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=772320362&single=true&output=csv',
+            AGO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=401963441&single=true&output=csv',
+            SET: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=2109863438&single=true&output=csv',
+            OUT: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1372031695&single=true&output=csv',
+            NOV: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1335882778&single=true&output=csv',
+            DEZ: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=36750990&single=true&output=csv',
+            ACAO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=410178243&single=true&output=csv',
+            IND: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1794727193&single=true&output=csv'
+        };
+
         const MASTERS_LIST = [
             "Milene Cristina Bartolli", "Kerolayne Viana", "Ariane Luz da Rocha", "Frederico Omar Castel...",
             "MG - Julio C. Machado", "Julio C. Machado", "Helio Gomes Cruz Ra...", "Eugênio Monteiro",
@@ -536,110 +571,80 @@
         let masterDB = [];
 
         window.onload = () => {
-            generateMockData();
+            loadRealData(); 
             populateMasterSelect();
-            applyFilters();
         };
 
-        function generateMockData() {
-            const sources = ['JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
-            const statuses = ['Ativo', 'Inativo', 'Em Negociação', 'Implantação', 'Perdido'];
-            const ufs = ['SP', 'RJ', 'MG', 'RS', 'BA', 'SC', 'PE', 'PR'];
+        async function loadRealData() {
+            const loadingText = document.getElementById('loading-text');
+            const keys = Object.keys(SHEET_URLS);
             
-            const randomDate = (year) => {
-                const m = Math.floor(Math.random()*12)+1;
-                const d = Math.floor(Math.random()*28)+1;
-                return `${year}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-            };
+            try {
+                const promises = keys.map(async (key) => {
+                    loadingText.innerText = `Baixando planilha: ${key}...`;
+                    const finalUrl = PROXY_URL + encodeURIComponent(SHEET_URLS[key]);
+                    const data = await fetchCSV(finalUrl, key);
+                    return data.map(row => normalizeData(row, key));
+                });
 
-            // MOCK DATA GENERATION (Mesmo das versões anteriores)
-            // 1. GERAIS
-            for(let i=0; i<150; i++) {
-                masterDB.push({
-                    source: sources[Math.floor(Math.random() * sources.length)],
-                    name: `Cliente V4 Exemplo ${i+1}`,
-                    email: `contato${i+1}@empresa.com`,
-                    phone: `(11) 99999-${1000 + i}`,
-                    city: 'São Paulo', 
-                    uf: ufs[Math.floor(Math.random() * ufs.length)],
-                    status: statuses[Math.floor(Math.random() * statuses.length)],
-                    createdAt: randomDate(2024)
-                });
+                const results = await Promise.all(promises);
+                masterDB = results.flat().filter(item => item.name && item.name !== 'Sem Nome');
+                
+                loadingText.innerText = 'Processando dados...';
+                applyFilters(); // Renderiza
+                
+                setTimeout(() => { 
+                    document.getElementById('loading-overlay').style.opacity = '0'; 
+                    setTimeout(()=>document.getElementById('loading-overlay').style.display='none', 500); 
+                }, 500);
+
+            } catch (error) {
+                console.error(error);
+                loadingText.innerText = 'Erro ao carregar dados. Verifique o console.';
+                loadingText.style.color = 'red';
             }
-            // 2. AÇÃO
-            for(let i=0; i<30; i++) {
-                masterDB.push({
-                    source: 'ACAO',
-                    name: `Lead Campanha ${i+1}`,
-                    email: `lead${i+1}@gmail.com`,
-                    phone: `(21) 98888-${2000 + i}`,
-                    city: 'Rio de Janeiro',
-                    uf: 'RJ',
-                    status: Math.random() > 0.3 ? 'Ativo' : 'Inativo',
-                    createdAt: randomDate(2025)
+        }
+
+        async function fetchCSV(url, key) {
+            try {
+                const res = await fetch(url);
+                const text = await res.text();
+                return parseCSV(text);
+            } catch (e) { console.error(`Erro em ${key}`, e); return []; }
+        }
+
+        function parseCSV(text) {
+            const lines = text.split('\n').filter(l => l.trim() !== '');
+            if (lines.length < 2) return [];
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+            return lines.slice(1).map(line => {
+                const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                if(!values) return null;
+                const obj = {};
+                headers.forEach((h, i) => {
+                    let val = values[i] || '';
+                    val = val.replace(/^"|"$/g, '').replace(/""/g, '"').trim();
+                    obj[h] = val;
                 });
-            }
-            // 3. INDIVIDUAIS
-            for(let i=0; i<20; i++) {
-                masterDB.push({
-                    source: 'IND',
-                    name: `Agência Parceira ${i+1}`,
-                    email: `parceiro${i+1}@agencia.com`,
-                    phone: `(31) 97777-${3000 + i}`,
-                    city: 'Belo Horizonte',
-                    uf: 'MG',
-                    status: Math.random() > 0.5 ? 'Ativo' : 'Inativo',
-                    createdAt: randomDate(2024)
-                });
-            }
-            // 4. BANT 4
-            for(let i=0; i<50; i++) {
-                const rDate = randomDate(2025);
-                masterDB.push({
-                    source: 'BANT4',
-                    name: `Lead BANT4 ${i+1}`,
-                    email: `bant${i+1}@lead.com`, 
-                    phone: `(11) 9...`,
-                    region: MASTERS_LIST[Math.floor(Math.random() * MASTERS_LIST.length)], 
-                    origin: 'LP Comparativo v4',
-                    reason: 'Qualificado BANT4 🚀',
-                    status: Math.random() > 0.8 ? 'Lead não responde' : 'null',
-                    city: '-', uf: '-',
-                    createdAt: rDate,
-                    displayDate: formatDatePtBR(rDate)
-                });
-            }
-            // 5. CONVERTIDOS
-            const stores = ['ÁGUAS LINDAS SHOPPING', 'VITORIA DE SANTO ANTÃO', 'VAZANTE', 'TAQUARA', 'SÃO JOÃO DA BARRA', 'STREET MALL TAPAJÓS', 'SHOPPING RUA DA PRAIA', 'SETOR CAMPINAS', 'FORMIGA'];
-            const quarters = ['1ºTRI', '2ºTRI', '3ºTRI', '4ºTRI'];
-            for(let i=0; i<40; i++) {
-                const year = Math.random() > 0.5 ? '2024' : '2025';
-                masterDB.push({
-                    source: 'CONVERTED',
-                    name: stores[Math.floor(Math.random() * stores.length)],
-                    year: year,
-                    quarter: quarters[Math.floor(Math.random() * quarters.length)],
-                    status: Math.random() > 0.3 ? 'Implantação' : 'Declinou',
-                    franchisee: `Franqueado ${i+1}`,
-                    email: `franqueado${i+1}@email.com`,
-                    city: '-', uf: '-', phone: '-',
-                    createdAt: randomDate(parseInt(year))
-                });
-            }
-            // 6. SCALINK
-            const scaStages = ['Lead', 'Reunião', 'Contato Inicial', 'null', 'Definição P...', 'Comitê Exp...', 'Lead Multi...', 'Franq...'];
-            for(let i=0; i<100; i++) {
-                masterDB.push({
-                    source: 'SCALINK',
-                    name: `Scalink Lead ${i+1}`,
-                    email: `scalink${i+1}@test.com`,
-                    status: Math.random() > 0.1 ? 'Ativo' : 'Inativo',
-                    stage: scaStages[Math.floor(Math.random() * scaStages.length)],
-                    uf: ufs[Math.floor(Math.random() * ufs.length)],
-                    city: 'Capital',
-                    createdAt: randomDate(2026)
-                });
-            }
+                return obj;
+            }).filter(i => i !== null);
+        }
+
+        function normalizeData(row, source) {
+            // Busca inteligente de colunas
+            const findKey = (keywords) => Object.keys(row).find(k => keywords.some(kw => k.includes(kw)));
+            
+            return {
+                source: source,
+                name: row[findKey(['nome', 'cliente', 'lead', 'name'])] || 'Sem Nome',
+                email: row[findKey(['email', 'mail'])] || '-',
+                phone: row[findKey(['tel', 'cel', 'phone'])] || '-',
+                city: row[findKey(['cidade', 'city'])] || '-',
+                uf: row[findKey(['uf', 'estado', 'state'])] || '-',
+                status: row[findKey(['status', 'fase', 'situação'])] || 'Ativo',
+                region: row[findKey(['regiao', 'master', 'regional'])] || '-', 
+                createdAt: row[findKey(['data', 'date', 'criado'])] || new Date().toISOString().split('T')[0]
+            };
         }
 
         function populateMasterSelect() {
@@ -652,13 +657,7 @@
             });
         }
 
-        function formatDatePtBR(isoDate) {
-            if(!isoDate) return '-';
-            const [y, m, d] = isoDate.split('-');
-            const months = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-            return `${d} de ${months[parseInt(m)-1]}. de ${y}`;
-        }
-
+        // --- SISTEMA DE VISUALIZAÇÃO ---
         function switchTab(pageId, btn) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
@@ -678,10 +677,7 @@
             quarterGroup.style.display = 'none';
 
             if (pageId === 'page-bant4') masterGroup.style.display = 'flex';
-            else if (pageId === 'page-converted') {
-                yearGroup.style.display = 'flex';
-                quarterGroup.style.display = 'flex';
-            }
+            else if (pageId === 'page-converted') { yearGroup.style.display = 'flex'; quarterGroup.style.display = 'flex'; }
         }
 
         function applyFilters() {
@@ -691,130 +687,64 @@
             const cityFilter = document.getElementById('inputCity').value.toLowerCase();
             const statusFilter = document.getElementById('selectStatus').value.toLowerCase();
             const masterFilter = document.getElementById('selectMaster').value;
-            const yearFilter = document.getElementById('selectYear').value;
-            const quarterFilter = document.getElementById('selectQuarter').value;
             const dateStart = document.getElementById('inputDateStart').value;
             const dateEnd = document.getElementById('inputDateEnd').value;
 
             const filtered = masterDB.filter(item => {
-                const isBant = item.source === 'BANT4';
-                const isConv = item.source === 'CONVERTED';
-
-                // DATA
+                // Filtro de Data
                 if(dateStart && dateEnd && item.createdAt) {
                     if(item.createdAt < dateStart || item.createdAt > dateEnd) return false;
                 }
-
-                // TEXTO
-                if(!item.name.toLowerCase().includes(search) && 
-                   !item.email.toLowerCase().includes(search) && 
-                   !(isBant && item.region.toLowerCase().includes(search))) return false;
                 
-                // ORIGEM
-                if(source !== "") {
-                     if(source === 'SCALINK' && item.source !== 'SCALINK') return false;
-                     else if(source === 'AÇÃO' && item.source !== 'ACAO') return false;
-                     else if(source === 'IND' && item.source !== 'IND') return false;
-                     else if(source === 'BANT4' && item.source !== 'BANT4') return false;
-                     else if(source === 'CONVERTED' && item.source !== 'CONVERTED') return false;
-                     else if(!['SCALINK','ACAO','IND','BANT4','CONVERTED'].includes(source) && item.source !== source) return false;
-                }
+                // Filtro de Texto
+                if(!item.name.toLowerCase().includes(search) && !item.email.toLowerCase().includes(search)) return false;
 
-                // UF
-                if(uf !== "") {
-                    if(isBant && !item.region.includes(uf)) return false;
-                    else if(!isBant && !isConv && (!item.uf || item.uf.toUpperCase().trim() !== uf)) return false;
-                }
+                // Filtros Padrão
+                if(source && item.source !== source) return false;
+                if(uf && !item.uf.toUpperCase().includes(uf)) return false;
+                if(cityFilter && !item.city.toLowerCase().includes(cityFilter)) return false;
+                if(statusFilter && !String(item.status).toLowerCase().includes(statusFilter)) return false;
 
-                // CIDADE
-                if(cityFilter !== "" && !item.city.toLowerCase().includes(cityFilter)) return false;
-                
-                // STATUS
-                if(statusFilter !== "") {
-                    let s = String(item.status).toLowerCase();
-                    if(isBant && statusFilter === 'qualificado' && !item.reason.includes('Qualificado')) return false;
-                    else if(!isBant || statusFilter !== 'qualificado') {
-                        if(statusFilter === 'ativo' && !(s.includes('ativo') || s.includes('implantação'))) return false;
-                        else if(statusFilter === 'inativo' && !(s.includes('inativo') || s.includes('perdido'))) return false;
-                        else if(statusFilter !== 'ativo' && statusFilter !== 'inativo' && !s.includes(statusFilter)) return false;
-                    }
-                }
-
-                // DINÂMICOS
-                if(masterFilter !== "" && isBant && item.region !== masterFilter) return false;
-                if(isConv) {
-                    if(yearFilter !== "" && item.year !== yearFilter) return false;
-                    if(quarterFilter !== "" && item.quarter !== quarterFilter) return false;
-                }
+                // Filtros Específicos
+                if(masterFilter && !String(item.region).includes(masterFilter)) return false;
 
                 return true;
             });
 
             renderViews(filtered);
-            renderOverview(filtered); // Atualiza a Visão Geral
+            renderOverview(filtered);
         }
 
-        // --- RENDERIZADORES ---
-
+        // RENDER FUNCTIONS
         function renderOverview(data) {
-            // KPIs
             document.getElementById('ov-total').innerText = data.length;
             document.getElementById('ov-active').innerText = data.filter(i => String(i.status).toLowerCase().match(/ativo|implantação/)).length;
-            document.getElementById('ov-bant').innerText = data.filter(i => i.source === 'BANT4' && i.reason.includes('Qualificado')).length;
+            document.getElementById('ov-bant').innerText = data.filter(i => i.source === 'BANT4').length;
             document.getElementById('ov-conv').innerText = data.filter(i => i.source === 'CONVERTED').length;
 
-            // Chart Origem (Barras simples CSS)
+            // Chart Origem
             const counts = {};
-            data.forEach(i => {
-                let k = i.source;
-                if(['JUL','AGO','SET','OUT','NOV','DEZ'].includes(k)) k = 'SEMESTRAL V4';
-                counts[k] = (counts[k] || 0) + 1;
-            });
-            
-            // Cores
-            const colors = { 'SEMESTRAL V4': '#00f2ff', 'ACAO': '#ffd700', 'IND': '#fff', 'BANT4': '#ffe600', 'CONVERTED': '#ffa500', 'SCALINK': '#ccc' };
-
+            data.forEach(i => { counts[i.source] = (counts[i.source] || 0) + 1; });
             const chartOrigin = document.getElementById('chart-origin');
             chartOrigin.innerHTML = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([key, val]) => {
                 const pct = (val / data.length) * 100;
-                return `
-                    <div class="chart-row">
-                        <div class="chart-label">${key}</div>
-                        <div class="chart-bar-bg">
-                            <div class="chart-bar-fill" style="width:${pct}%; background:${colors[key]||'#7000ff'};"></div>
-                        </div>
-                        <div class="chart-value">${val}</div>
-                    </div>
-                `;
+                return `<div class="chart-row"><div class="chart-label">${key}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--cyan);"></div></div><div class="chart-value">${val}</div></div>`;
             }).join('');
 
             // Chart Status
-            const stCounts = { 'Ativos': 0, 'Inativos': 0, 'Outros': 0 };
-            data.forEach(i => {
-                const s = String(i.status).toLowerCase();
-                if(s.includes('ativo') || s.includes('implantação')) stCounts['Ativos']++;
-                else if(s.includes('inativo') || s.includes('perdido') || s.includes('declinou')) stCounts['Inativos']++;
-                else stCounts['Outros']++;
+            const stCounts = {};
+            data.forEach(i => { 
+                let s = i.status || 'Outros';
+                stCounts[s] = (stCounts[s] || 0) + 1; 
             });
-
             const chartStatus = document.getElementById('chart-status');
-            chartStatus.innerHTML = Object.entries(stCounts).map(([key, val]) => {
+            chartStatus.innerHTML = Object.entries(stCounts).slice(0,5).map(([key, val]) => {
                 const pct = (val / data.length) * 100;
-                const color = key === 'Ativos' ? '#00ff88' : (key === 'Inativos' ? '#ff4d4d' : '#888');
-                return `
-                    <div class="chart-row">
-                        <div class="chart-label">${key}</div>
-                        <div class="chart-bar-bg">
-                            <div class="chart-bar-fill" style="width:${pct}%; background:${color};"></div>
-                        </div>
-                        <div class="chart-value">${val}</div>
-                    </div>
-                `;
+                return `<div class="chart-row"><div class="chart-label">${key.substring(0,10)}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:#00ff88;"></div></div><div class="chart-value">${val}</div></div>`;
             }).join('');
         }
 
         function renderViews(data) {
-            // (Reutiliza a lógica anterior para as outras abas)
             const p1Data = data.filter(i => ['JUL','AGO','SET','OUT','NOV','DEZ'].includes(i.source));
             renderTable('table-body-p1', p1Data, i => `<td><span class="tag-source tag-${i.source.toLowerCase()}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.email}</td><td>${i.city}/${i.uf}</td><td>${getStatusBadge(i.status)}</td>`);
             document.getElementById('kpi-p1-total').innerText = p1Data.length;
@@ -834,45 +764,24 @@
             document.getElementById('kpi-p3-inativos').innerText = p3Data.filter(i => i.status.toLowerCase().includes('inativo')).length;
 
             const bantData = data.filter(i => i.source === 'BANT4');
-            renderTable('table-body-bant4', bantData, i => `<td>${i.name}</td><td>${i.region}</td><td>${i.phone}</td><td>${i.origin}</td><td><span class="st-bant">${i.reason}</span></td><td>${i.displayDate}</td><td>${i.status === 'null' ? '<span style="opacity:0.3">null</span>' : i.status}</td>`);
+            renderTable('table-body-bant4', bantData, i => `<td>${i.name}</td><td>${i.region}</td><td>${i.phone}</td><td>-</td><td>-</td><td>${i.createdAt}</td><td>${getStatusBadge(i.status)}</td>`);
             document.getElementById('kpi-bant4-total').innerText = bantData.length;
 
             const convData = data.filter(i => i.source === 'CONVERTED');
-            renderTable('table-body-converted', convData, i => `<td><b>${i.name}</b></td><td>${i.year}</td><td>${i.quarter}</td><td>${getStatusBadge(i.status)}</td><td>${i.franchisee}</td><td>${i.email}</td>`);
+            renderTable('table-body-converted', convData, i => `<td><b>${i.name}</b></td><td>-</td><td>-</td><td>${getStatusBadge(i.status)}</td><td>-</td><td>${i.email}</td>`);
             document.getElementById('kpi-conv-total').innerText = convData.length;
 
             const scaData = data.filter(i => i.source === 'SCALINK');
             document.getElementById('kpi-sca-total').innerText = scaData.length;
             document.getElementById('sca-list-count').innerText = scaData.length;
             
-            // Scalink Logic
-            const stages = ['Lead', 'Reunião', 'Contato Inicial', 'null', 'Definição P...', 'Comitê Exp...', 'Lead Multi...', 'Franq...'];
-            const scaInativo = scaData.filter(i => i.status === 'Inativo');
-            const scaAtivo = scaData.filter(i => i.status === 'Ativo');
-            const getCounts = (dataset) => stages.map(st => dataset.filter(i => i.stage === st).length);
-            const inativoCounts = getCounts(scaInativo);
-            const ativoCounts = getCounts(scaAtivo);
-            const totalCounts = stages.map((_, idx) => inativoCounts[idx] + ativoCounts[idx]);
-
-            document.getElementById('scalink-funnel-body').innerHTML = `
-                <tr class="scalink-row-inactive"><td style="text-align:left; padding-left:15px;">Inativo</td>${inativoCounts.map(c => `<td>${c}</td>`).join('')}<td>${scaInativo.length}</td></tr>
-                <tr class="scalink-row-active"><td style="text-align:left; padding-left:15px;">Ativo</td>${ativoCounts.map(c => `<td>${c}</td>`).join('')}<td>${scaAtivo.length}</td></tr>
-                <tr class="scalink-row-total"><td style="text-align:left; padding-left:15px;">Total geral</td>${totalCounts.map(c => `<td>${c}</td>`).join('')}<td>${scaData.length}</td></tr>
-            `;
-
+            // Render Scalink List
             document.getElementById('scalink-list-body').innerHTML = scaData.map((i, idx) => `
                 <tr style="border-bottom:1px solid #222; font-size:0.75rem;"><td style="padding:10px; width:30px;">${idx+1}.</td><td>${i.name}</td><td style="color:#888;">${i.email}</td><td style="text-align:right;">${i.uf}</td></tr>
             `).join('');
 
-            const states = {};
-            scaData.forEach(i => { states[i.uf] = (states[i.uf] || 0) + 1; });
-            const sortedStates = Object.entries(states).sort((a,b) => b[1] - a[1]);
-            document.getElementById('scalink-chart-body').innerHTML = sortedStates.map(([uf, count]) => {
-                const percent = (count / scaData.length) * 100;
-                return `<div class="bar-row"><div class="bar-label">${uf}</div><div class="bar-track"><div class="bar-fill" style="width:${percent}%"></div></div><div class="bar-val">${count}</div></div>`;
-            }).join('');
-
-            renderTable('table-body-master', data, i => `<td><span class="tag-source tag-${i.source.toLowerCase().substring(0,3)}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.source === 'BANT4' ? i.region : i.city + ' - ' + i.uf}</td><td>${i.email} <br><small style="color:#666">${i.phone}</small></td><td>${getStatusBadge(i.status)}</td>`);
+            // Render Master
+            renderTable('table-body-master', data, i => `<td><span class="tag-source tag-${i.source.toLowerCase().substring(0,3)}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.city} - ${i.uf}</td><td>${i.email} <br><small style="color:#666">${i.phone}</small></td><td>${getStatusBadge(i.status)}</td>`);
             document.getElementById('kpi-master-total').innerText = data.length;
         }
 
@@ -883,14 +792,14 @@
         }
 
         function getStatusBadge(status) {
-            const s = status ? status.toLowerCase() : '';
+            const s = String(status).toLowerCase();
             let className = '';
             if(s.includes('ativo') || s.includes('implantação')) className = 'st-ativo';
-            else if(s.includes('inativo') || s.includes('perdido') || s.includes('declinou')) className = 'st-inativo';
+            else if(s.includes('inativo') || s.includes('perdido')) className = 'st-inativo';
             else if(s.includes('negocia')) className = 'st-negocia';
             return `<span class="status-badge ${className}">${status}</span>`;
         }
-        
+
         ['inputSearch', 'selectSource', 'selectUF', 'inputCity', 'selectStatus', 'selectMaster', 'selectYear', 'selectQuarter', 'inputDateStart', 'inputDateEnd'].forEach(id => {
             document.getElementById(id).addEventListener(id.includes('input') ? 'input' : 'change', applyFilters);
         });
