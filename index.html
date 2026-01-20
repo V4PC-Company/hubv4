@@ -269,8 +269,6 @@
                     <option value="Lead declinou">Lead declinou</option>
                     <option value="Em negociação">Em negociação</option>
                     <option value="Processo concluído com êxito">Processo concluído com êxito</option>
-                    <option value="Implantação">Implantação</option>
-                    <option value="Qualificado">Qualificado</option>
                 </select>
             </div>
             <button class="btn-filter" onclick="applyFilters()"><i class="fas fa-sync"></i></button>
@@ -430,8 +428,6 @@
             DEZ: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=36750990&single=true&output=csv',
             ACAO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=410178243&single=true&output=csv',
             IND: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1794727193&single=true&output=csv',
-            
-            // BANT 4
             BANT_MAR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=248606401&single=true&output=csv',
             BANT_ABR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=143072328&single=true&output=csv',
             BANT_MAI: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=1603044254&single=true&output=csv',
@@ -481,11 +477,13 @@
         }
 
         function parseCSV(text) {
+            // CORREÇÃO: PARSER QUE RESPEITA ESPAÇOS E VÍRGULAS DENTRO DE ASPAS
             const lines = text.split('\n').filter(l => l.trim()!=='');
             if(lines.length<2) return [];
             const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,'').toLowerCase());
             return lines.slice(1).map(line => {
-                const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                // Regex melhorado para capturar campos com espaço
+                const values = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
                 if(!values) return null;
                 const obj = {};
                 headers.forEach((h, i) => {
@@ -501,25 +499,24 @@
             const findKey = (keywords) => Object.keys(row).find(k => keywords.some(kw => k.includes(kw)));
             let finalSource = source.startsWith('BANT') ? 'BANT4' : source;
 
-            // 1. NOME (SEGUNDA COLUNA - FIXO)
-            const values = Object.values(row); 
-            // Pega a 2ª coluna (index 1) se existir, senão tenta a 1ª
-            let name = values[1] || values[0] || 'Sem Nome';
+            // 1. NOME (FORÇA BRUTA: 2ª Coluna ou Busca)
+            const values = Object.values(row);
+            let name = values[1] || values[0] || 'Sem Nome'; // Pega o valor da 2ª coluna direto
 
-            // 2. MASTER/REGIÃO (Busca robusta)
+            // 2. MASTER/REGIÃO (Busca o valor completo)
             const regionKey = Object.keys(row).find(k => 
-                k.includes('master') || k.includes('regia') || k.includes('region') || k.includes('consultor') || k.includes('respons')
+                k.toLowerCase().includes('master') || k.toLowerCase().includes('regi') || k.toLowerCase().includes('consultor')
             );
             let region = row[regionKey] || '-';
 
-            // 3. LOCALIDADE (Combina Cidade + UF)
+            // 3. LOCALIDADE (Tenta montar ou pegar da região)
             const cityKey = findKey(['cidade', 'município', 'local']);
             const ufKey = findKey(['uf', 'estado']);
             let loc = '-';
             if(row[cityKey] && row[ufKey]) loc = `${row[cityKey]} - ${row[ufKey]}`;
             else if(row[cityKey]) loc = row[cityKey];
             else if(row[ufKey]) loc = row[ufKey];
-            if(loc === '-' || loc === 'null') loc = region; // Fallback para região
+            if(loc === '-' || loc === 'null') loc = region; 
 
             return {
                 source: finalSource,
