@@ -13,7 +13,6 @@
         :root {
             --bg-dark: #05020a; --sidebar-bg: #0a0414; --card-bg: rgba(20, 10, 35, 0.95);
             --cyan: #00f2ff; --magenta: #ff00e5; --purple: #7000ff; --yellow: #ffd700;
-            --bant-color: #ffe600; 
             --border: rgba(0, 242, 255, 0.15); --text-main: #e0e0e0; --text-muted: #8c8c8c;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -61,8 +60,8 @@
         .btn-filter:hover { background: var(--magenta); transform: scale(1.05); }
 
         .dynamic-filter { display: none; min-width: 160px; }
-        #group-master label { color: var(--bant-color); }
-        #group-master select { border-color: var(--bant-color); color: #fff; }
+        #group-master label { color: var(--yellow); }
+        #group-master select { border-color: var(--yellow); color: #fff; }
         #group-year label, #group-quarter label { color: var(--yellow); }
         #group-year select, #group-quarter select { border-color: var(--yellow); color: #fff; }
 
@@ -89,7 +88,7 @@
         .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .chart-container { padding: 20px; }
         .chart-row { display: flex; align-items: center; margin-bottom: 12px; font-size: 0.8rem; }
-        .chart-label { width: 100px; color: #aaa; font-weight: 500; }
+        .chart-label { width: 130px; color: #aaa; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .chart-bar-bg { flex: 1; background: #1a1a1a; height: 12px; border-radius: 6px; overflow: hidden; margin: 0 10px; }
         .chart-bar-fill { height: 100%; border-radius: 6px; transition: width 1s; }
         .chart-value { width: 40px; text-align: right; color: #fff; font-weight: bold; }
@@ -126,15 +125,31 @@
         .tag-dez { border: 1px solid #00ff88; color: #00ff88; background: rgba(0, 255, 136, 0.05); }
         .tag-acao { border: 1px solid #ffd700; color: #ffd700; background: rgba(255, 215, 0, 0.05); }
         .tag-ind { border: 1px solid #fff; color: #fff; background: rgba(255, 255, 255, 0.05); }
-        .tag-bant { border: 1px solid var(--bant-color); color: var(--bant-color); background: rgba(255, 230, 0, 0.05); }
+        .tag-bant { border: 1px solid #7cb342; color: #7cb342; background: rgba(124, 179, 66, 0.05); }
         .tag-conv { border: 1px solid var(--yellow); color: var(--yellow); background: rgba(255, 215, 0, 0.05); }
         .tag-sca { border: 1px solid #fff; color: #fff; background: #222; }
 
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; display: inline-block; white-space: nowrap; max-width: 150px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
-        .st-ativo { color: #00ff88; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.2); }
-        .st-inativo { color: #ff4d4d; background: rgba(255, 77, 77, 0.1); border: 1px solid rgba(255, 77, 77, 0.2); }
-        .st-negocia { color: #ffd700; background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.2); }
-        .st-bant { color: var(--bant-color); background: rgba(255, 230, 0, 0.1); border: 1px solid rgba(255, 230, 0, 0.2); font-weight: bold; }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; display: inline-block; white-space: nowrap; max-width: 180px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; text-transform: uppercase; border: 1px solid transparent; }
+        
+        /* CORES ESPECÍFICAS DOS PRINTS */
+        .bdg-bant { background-color: #689F38; color: white; border-color: #558b2f; } /* Verde BANT4 */
+        .bdg-cvc { background-color: #FFEB3B; color: #000; border-color: #FBC02D; } /* Amarelo CVC */
+        .bdg-home { background-color: #C62828; color: white; border-color: #b71c1c; } /* Vermelho Home Office */
+        .bdg-live { background-color: #1565C0; color: white; border-color: #0D47A1; } /* Azul Live */
+        .bdg-nointerest { background-color: #8B0000; color: white; border-color: #500; } /* Vermelho Escuro Não Interesse */
+        .bdg-invalid { background-color: #424242; color: white; border-color: #212121; } /* Cinza Telefone Inválido */
+        .bdg-return { background-color: #FF4081; color: white; border-color: #C51162; } /* Rosa Retornar */
+        .bdg-teal { background-color: #00695C; color: white; border-color: #004D40; } /* Teal Liguei/Nao Atendeu */
+        .bdg-red { background-color: #D32F2F; color: white; border-color: #B71C1C; } /* Vermelho Erro/Budget */
+        .bdg-blue { background-color: #2196F3; color: white; border-color: #1976D2; } /* Azul Participou Live */
+        .bdg-orange { background-color: #FF8A65; color: white; border-color: #D84315; } /* Laranja Whats */
+        .bdg-brown { background-color: #5D4037; color: white; border-color: #3E2723; } /* Marrom Faltou */
+        .bdg-pink { background-color: #F48FB1; color: white; border-color: #EC407A; } /* Rosa Futuro */
+        .bdg-gray { background-color: #78909C; color: white; border-color: #546E7A; } /* Cinza Sem Resposta */
+        .bdg-cyan { background-color: #4DD0E1; color: #000; border-color: #00ACC1; } /* Ciano Reunião */
+        .bdg-darkblue { background-color: #01579B; color: white; border-color: #003c8f; } /* Azulão Franqueado */
+        
+        .bdg-default { background: rgba(255,255,255,0.1); color: #ccc; }
 
     </style>
 </head>
@@ -263,12 +278,24 @@
                 <label>Status</label>
                 <select id="selectStatus" class="filter-input">
                     <option value="">Todos</option>
-                    <option value="Lead tem interesse">Lead tem interesse</option>
-                    <option value="Sem retorno">Sem retorno</option>
-                    <option value="Declinado internamente">Declinado internamente</option>
-                    <option value="Lead declinou">Lead declinou</option>
-                    <option value="Em negociação">Em negociação</option>
-                    <option value="Processo concluído com êxito">Processo concluído com êxito</option>
+                    <option value="BANT4">BANT4</option>
+                    <option value="CVC AGENTES">CVC AGENTES</option>
+                    <option value="HOME OFFICE">HOME OFFICE</option>
+                    <option value="LIVE AGENDA">LIVE AGENDA</option>
+                    <option value="N TEM INTERESSE">N TEM INTERESSE</option>
+                    <option value="TELEFONE INVÁLIDO">TELEFONE INVÁLIDO</option>
+                    <option value="RETORNAR">RETORNAR</option>
+                    <option value="LIGUEI E N FUI ATENDIDA">LIGUEI E N FUI ATENDIDA</option>
+                    <option value="SE CADASTROU ERRADO">SE CADASTROU ERRADO</option>
+                    <option value="N TEM BUDGET">N TEM BUDGET</option>
+                    <option value="PARTICIPOU DA LIVE">PARTICIPOU DA LIVE</option>
+                    <option value="CONTATADO WHATSAPP">CONTATADO WHATSAPP</option>
+                    <option value="FALTOU NA LIVE">FALTOU NA LIVE</option>
+                    <option value="INTERESSE FUTURO">INTERESSE FUTURO</option>
+                    <option value="SEM RESPOSTA">SEM RESPOSTA</option>
+                    <option value="REUNIÃO COM CONSULTOR">REUNIÃO COM CONSULTOR</option>
+                    <option value="JÁ É FRANQUEADO">JÁ É FRANQUEADO</option>
+                    <option value="DESQUALIFICADO">DESQUALIFICADO</option>
                 </select>
             </div>
             <button class="btn-filter" onclick="applyFilters()"><i class="fas fa-sync"></i></button>
@@ -296,12 +323,20 @@
 
             <div class="overview-grid">
                 <div class="card">
-                    <div class="card-header">Distribuição por Origem</div>
-                    <div class="chart-container" id="chart-origin"></div>
+                    <div class="card-header">Top Consultores (Desempenho)</div>
+                    <div class="chart-container" id="chart-consultants"></div>
                 </div>
                 <div class="card">
-                    <div class="card-header">Saúde da Base (Status)</div>
-                    <div class="chart-container" id="chart-status"></div>
+                    <div class="card-header">Top Cidades (Interesse)</div>
+                    <div class="chart-container" id="chart-cities"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Funil de Status</div>
+                    <div class="chart-container" id="chart-funnel"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Distribuição por Origem</div>
+                    <div class="chart-container" id="chart-origin"></div>
                 </div>
             </div>
         </section>
@@ -477,12 +512,12 @@
         }
 
         function parseCSV(text) {
-            // CORREÇÃO: PARSER QUE RESPEITA ESPAÇOS E VÍRGULAS DENTRO DE ASPAS
+            // REGEX CORRIGIDA: LÊ ATÉ A VIRGULA, IGNORANDO ESPAÇOS DENTRO DO CAMPO
             const lines = text.split('\n').filter(l => l.trim()!=='');
             if(lines.length<2) return [];
             const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,'').toLowerCase());
             return lines.slice(1).map(line => {
-                // Regex melhorado para capturar campos com espaço
+                // Regex: Captura "tudo entre aspas" OU tudo que não é vírgula
                 const values = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
                 if(!values) return null;
                 const obj = {};
@@ -499,9 +534,9 @@
             const findKey = (keywords) => Object.keys(row).find(k => keywords.some(kw => k.includes(kw)));
             let finalSource = source.startsWith('BANT') ? 'BANT4' : source;
 
-            // 1. NOME (FORÇA BRUTA: 2ª Coluna ou Busca)
+            // 1. NOME (SEMPRE PEGA A 2ª COLUNA - INDEX 1)
             const values = Object.values(row);
-            let name = values[1] || values[0] || 'Sem Nome'; // Pega o valor da 2ª coluna direto
+            let name = values[1] ? values[1].trim() : (values[0] || 'Sem Nome');
 
             // 2. MASTER/REGIÃO (Busca o valor completo)
             const regionKey = Object.keys(row).find(k => 
@@ -509,7 +544,7 @@
             );
             let region = row[regionKey] || '-';
 
-            // 3. LOCALIDADE (Tenta montar ou pegar da região)
+            // 3. LOCALIDADE
             const cityKey = findKey(['cidade', 'município', 'local']);
             const ufKey = findKey(['uf', 'estado']);
             let loc = '-';
@@ -585,24 +620,37 @@
             document.getElementById('ov-bant').innerText = data.filter(i => i.source === 'BANT4').length;
             document.getElementById('ov-conv').innerText = data.filter(i => i.source === 'CONVERTED').length;
 
+            // CHART 1: ORIGEM
             const counts = {}; data.forEach(i => counts[i.source]=(counts[i.source]||0)+1);
             const prettyNames = { 'IND': 'AG. INDIVIDUAIS', 'ACAO': 'AÇÃO FIM ANO', 'BANT4': 'BANT 4', 'CONVERTED': 'CONVERTIDOS' };
-            
             document.getElementById('chart-origin').innerHTML = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
                 const pct = (v/data.length)*100;
                 return `<div class="chart-row"><div class="chart-label" style="width:120px;">${prettyNames[k]||k}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--cyan);"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
 
+            // CHART 2: TOP CONSULTORES
+            const masters = {}; data.forEach(i => { if(i.region && i.region.length > 3) masters[i.region] = (masters[i.region]||0)+1; });
+            document.getElementById('chart-consultants').innerHTML = Object.entries(masters).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>{
+                const pct = (v/data.length)*100;
+                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${k.substring(0,18)}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--yellow);"></div></div><div class="chart-value">${v}</div></div>`;
+            }).join('');
+
+            // CHART 3: TOP CIDADES
+            const cities = {}; data.forEach(i => { if(i.city && i.city.length > 3) cities[i.city] = (cities[i.city]||0)+1; });
+            document.getElementById('chart-cities').innerHTML = Object.entries(cities).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>{
+                const pct = (v/data.length)*100;
+                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${k.substring(0,18)}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--magenta);"></div></div><div class="chart-value">${v}</div></div>`;
+            }).join('');
+
+            // CHART 4: STATUS (LIMPO)
             const stCounts = {}; 
             data.forEach(i => { 
                 let s = String(i.status).toUpperCase().trim();
-                // LIMPEZA: Remove "5", "null", "-", números
                 if(!s || s==='NULL' || s==='-' || !isNaN(s) || s.length<3) return;
                 if(s.length>20) s=s.substring(0,20)+'...';
                 stCounts[s] = (stCounts[s]||0)+1; 
             });
-            
-            document.getElementById('chart-status').innerHTML = Object.entries(stCounts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>{
+            document.getElementById('chart-funnel').innerHTML = Object.entries(stCounts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>{
                 const pct = (v/data.length)*100;
                 return `<div class="chart-row"><div class="chart-label" style="width:120px;">${k}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:#00ff88;"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
@@ -630,12 +678,26 @@
         }
 
         function getStatusBadge(status) {
-            const s = String(status).toLowerCase();
-            let className = '';
-            if(s.match(/interesse|êxito|implantação|ativo/)) className = 'st-ativo';
-            else if(s.match(/sem retorno|declinou|inativo|perdido/)) className = 'st-inativo';
-            else if(s.match(/negociação/)) className = 'st-negocia';
-            return `<span class="status-badge ${className}">${status}</span>`;
+            const s = String(status).trim().toUpperCase();
+            let c = 'bdg-default';
+            if(s.includes('BANT')) c = 'bdg-bant';
+            else if(s.includes('CVC')) c = 'bdg-cvc';
+            else if(s.includes('HOME')) c = 'bdg-home';
+            else if(s.includes('LIVE')) c = 'bdg-live';
+            else if(s.includes('N TEM INTERESSE')) c = 'bdg-nointerest';
+            else if(s.includes('INVÁLIDO')) c = 'bdg-invalid';
+            else if(s.includes('RETORNAR')) c = 'bdg-return';
+            else if(s.includes('ATENDIDA')) c = 'bdg-teal';
+            else if(s.includes('ERRADO') || s.includes('BUDGET')) c = 'bdg-red';
+            else if(s.includes('PARTICIPOU')) c = 'bdg-blue';
+            else if(s.includes('WHATSAPP')) c = 'bdg-orange';
+            else if(s.includes('FALTOU')) c = 'bdg-brown';
+            else if(s.includes('FUTURO')) c = 'bdg-pink';
+            else if(s.includes('SEM RESPOSTA')) c = 'bdg-gray';
+            else if(s.includes('REUNIÃO')) c = 'bdg-cyan';
+            else if(s.includes('FRANQUEADO')) c = 'bdg-darkblue';
+            else if(s.includes('DESQUALIFICADO')) c = 'bdg-nointerest';
+            return `<span class="status-badge ${c}">${status}</span>`;
         }
 
         ['inputSearch', 'selectSource', 'selectUF', 'selectStatus', 'selectMaster', 'selectYear', 'selectQuarter', 'inputDateStart', 'inputDateEnd'].forEach(id => {
