@@ -276,6 +276,12 @@
                     <option value="Inativo">Inativo</option>
                     <option value="Qualificado">Qualificado</option>
                     <option value="Implantação">Implantação</option>
+                    <option value="Lead tem interesse">Lead tem interesse</option>
+                    <option value="Sem retorno">Sem retorno</option>
+                    <option value="Declinado internamente">Declinado internamente</option>
+                    <option value="Lead declinou">Lead declinou</option>
+                    <option value="Em negociação">Em negociação</option>
+                    <option value="Processo concluído com êxito">Processo concluído com êxito</option>
                 </select>
             </div>
             <button class="btn-filter" onclick="applyFilters()"><i class="fas fa-sync"></i></button>
@@ -562,7 +568,7 @@
             ACAO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=410178243&single=true&output=csv',
             IND: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1794727193&single=true&output=csv',
 
-            // LEADS BANT 4 (Novos Links)
+            // LEADS BANT 4 (LINKS ATUALIZADOS)
             BANT_MAR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=248606401&single=true&output=csv',
             BANT_ABR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=143072328&single=true&output=csv',
             BANT_MAI: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=1603044254&single=true&output=csv',
@@ -662,20 +668,25 @@
         function normalizeData(row, source) {
             const findKey = (keywords) => Object.keys(row).find(k => keywords.some(kw => k.includes(kw)));
             
-            // Define o "Tipo" de fonte
+            // Definição da origem
             let finalSource = source;
             if (source.startsWith('BANT')) finalSource = 'BANT4';
             
+            // Busca aprimorada para Nome, Cidade e Região
+            const nameKey = findKey(['nome completo', 'nome do lead', 'cliente', 'nome', 'lead name', 'full name']);
+            const cityKey = findKey(['cidade', 'município', 'local', 'city']);
+            const ufKey = findKey(['uf', 'estado', 'state']);
+            const regionKey = findKey(['master', 'região', 'regional', 'consultor']);
+            
             return {
                 source: finalSource,
-                // Procura por "Nome" ou "Cliente"
-                name: row[findKey(['nome', 'cliente', 'lead', 'name'])] || 'Sem Nome',
+                name: row[nameKey] || row[Object.keys(row)[0]] || 'Sem Nome', // Tenta pegar a 1ª coluna se não achar nome
                 email: row[findKey(['email', 'mail'])] || '-',
                 phone: row[findKey(['tel', 'cel', 'phone'])] || '-',
-                city: row[findKey(['cidade', 'city'])] || '-',
-                uf: row[findKey(['uf', 'estado', 'state'])] || '-',
+                city: row[cityKey] || '-',
+                uf: row[ufKey] || '-',
                 status: row[findKey(['status', 'fase', 'situação'])] || 'Ativo',
-                region: row[findKey(['regiao', 'master', 'regional'])] || '-',
+                region: row[regionKey] || '-', 
                 origin: row[findKey(['origem'])] || '-', 
                 reason: row[findKey(['motivo', 'encerramento'])] || '-', 
                 createdAt: row[findKey(['data', 'date', 'criado'])] || new Date().toISOString().split('T')[0]
@@ -752,27 +763,34 @@
 
         function renderOverview(data) {
             document.getElementById('ov-total').innerText = data.length;
-            document.getElementById('ov-active').innerText = data.filter(i => String(i.status).toLowerCase().match(/ativo|implantação/)).length;
+            document.getElementById('ov-active').innerText = data.filter(i => String(i.status).toLowerCase().match(/ativo|implantação|qualificado/)).length;
             document.getElementById('ov-bant').innerText = data.filter(i => i.source === 'BANT4').length;
             document.getElementById('ov-conv').innerText = data.filter(i => i.source === 'CONVERTED').length;
 
             const counts = {};
             data.forEach(i => { counts[i.source] = (counts[i.source] || 0) + 1; });
+            
+            // Mapa de nomes bonitos para o gráfico
+            const prettyNames = { 'IND': 'AG. INDIVIDUAIS', 'ACAO': 'AÇÃO FIM ANO', 'BANT4': 'BANT 4', 'CONVERTED': 'CONVERTIDOS' };
+
             const chartOrigin = document.getElementById('chart-origin');
             chartOrigin.innerHTML = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([key, val]) => {
                 const pct = (val / data.length) * 100;
-                return `<div class="chart-row"><div class="chart-label">${key}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--cyan);"></div></div><div class="chart-value">${val}</div></div>`;
+                const label = prettyNames[key] || key; 
+                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${label}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--cyan);"></div></div><div class="chart-value">${val}</div></div>`;
             }).join('');
 
             const stCounts = {};
             data.forEach(i => { 
-                let s = i.status || 'Outros';
+                let s = String(i.status).toUpperCase().trim();
+                if(!s || s === 'NULL' || s === '-' || !isNaN(s) || s.length < 2) return; // Filtra sujeira
+                if(s.length > 15) s = s.substring(0,15) + '...';
                 stCounts[s] = (stCounts[s] || 0) + 1; 
             });
             const chartStatus = document.getElementById('chart-status');
-            chartStatus.innerHTML = Object.entries(stCounts).slice(0,5).map(([key, val]) => {
+            chartStatus.innerHTML = Object.entries(stCounts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([key, val]) => {
                 const pct = (val / data.length) * 100;
-                return `<div class="chart-row"><div class="chart-label">${key.substring(0,10)}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:#00ff88;"></div></div><div class="chart-value">${val}</div></div>`;
+                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${key}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:#00ff88;"></div></div><div class="chart-value">${val}</div></div>`;
             }).join('');
         }
 
@@ -795,7 +813,6 @@
             document.getElementById('kpi-p3-ativos').innerText = p3Data.filter(i => i.status.toLowerCase().includes('ativo')).length;
             document.getElementById('kpi-p3-inativos').innerText = p3Data.filter(i => i.status.toLowerCase().includes('inativo')).length;
 
-            // RENDERIZAÇÃO CORRIGIDA PARA BANT 4
             const bantData = data.filter(i => i.source === 'BANT4');
             renderTable('table-body-bant4', bantData, i => `<td>${i.name}</td><td>${i.region}</td><td>${i.phone}</td><td>${i.origin}</td><td><span class="st-bant">${i.reason}</span></td><td>${i.createdAt}</td><td>${getStatusBadge(i.status)}</td>`);
             document.getElementById('kpi-bant4-total').innerText = bantData.length;
