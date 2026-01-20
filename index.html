@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVC | Hub de Dados Integrado (V4 Theme)</title>
+    <title>CVC | Hub de Dados Integrado (Warm Theme)</title>
     
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/906/906343.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
@@ -11,75 +11,73 @@
 
     <style>
         :root {
-            /* TEMA V4 RED */
-            --bg-dark: #05020a;
-            --sidebar-bg: #0a0414;
-            /* Fundo dos cards levemente avermelhado */
-            --card-bg: rgba(35, 10, 10, 0.95);
+            /* TEMA WARM GRADIENT (Laranja, Vermelho, Roxo Quente, Dourado) - NO BLUE */
+            --bg-dark: #0a0502; /* Fundo quase preto com toque laranja */
+            --sidebar-bg: #140a05;
+            --card-bg: rgba(35, 15, 10, 0.95); /* Fundo dos cards quente */
             
-            /* Substituindo o Azul Ciano pelo VERMELHO V4 Vibrante */
-            --cyan: #E60000; 
-            /* Substituindo Magenta/Roxo por Carmesim/Bordô para contraste */
-            --magenta: #A00000;
-            --purple: #7f0000;
+            /* Cores Principais */
+            --primary-orange: #FF5722; /* Laranja Vibrante (Substitui o Ciano/Vermelho anterior) */
+            --secondary-crimson: #C70039; /* Carmesim/Roxo avermelhado para contraste */
+            --accent-purple: #900C3F; /* Roxo quente para botões/detalhes */
             
-            --yellow: #ffd700;
+            --yellow: #FFD700; /* Dourado mantido */
             --bant-color: #ffe600; 
             
-            /* Bordas avermelhadas */
-            --border: rgba(230, 0, 0, 0.25);
+            /* Bordas alaranjadas */
+            --border: rgba(255, 87, 34, 0.25);
             --text-main: #e0e0e0;
-            --text-muted: #8c8c8c;
+            --text-muted: #aca09c;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
+        /* Fundo com gradiente radial quente */
+        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at 10% 10%, #3a1005 0%, #0a0502 100%); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
         
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0414; }
+        ::-webkit-scrollbar-track { background: #140a05; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-orange); }
 
         #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s; }
-        /* Spinner vermelho */
-        .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid var(--cyan); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        /* Spinner laranja */
+        .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid var(--primary-orange); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         #error-log { display: none; margin-top: 20px; padding: 15px; background: #330000; border: 1px solid red; color: #ff9999; font-family: monospace; font-size: 0.7rem; max-width: 80%; text-align: left; }
 
         .sidebar { width: 280px; background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; }
-        /* Brand com brilho vermelho */
-        .brand { padding: 0 20px 30px; display: flex; align-items: center; gap: 10px; font-family: 'Orbitron', sans-serif; color: var(--cyan); font-size: 1rem; letter-spacing: 1px; text-shadow: 0 0 10px rgba(230, 0, 0, 0.4); }
+        /* Brand com brilho laranja */
+        .brand { padding: 0 20px 30px; display: flex; align-items: center; gap: 10px; font-family: 'Orbitron', sans-serif; color: var(--primary-orange); font-size: 1rem; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255, 87, 34, 0.4); }
         
         .menu-item { padding: 14px 20px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: var(--text-muted); font-size: 0.85rem; transition: 0.3s; border-left: 3px solid transparent; font-weight: 500; }
         .menu-item:hover { background: rgba(255, 255, 255, 0.03); color: #fff; }
-        /* Menu ativo com gradiente vermelho */
-        .menu-item.active { color: white; border-left: 3px solid var(--cyan); background: linear-gradient(90deg, rgba(230, 0, 0, 0.2) 0%, transparent 100%); text-shadow: 0 0 8px rgba(255,255,255,0.5); }
+        /* Menu ativo com gradiente laranja */
+        .menu-item.active { color: white; border-left: 3px solid var(--primary-orange); background: linear-gradient(90deg, rgba(255, 87, 34, 0.2) 0%, transparent 100%); text-shadow: 0 0 8px rgba(255,255,255,0.5); }
         
-        .submenu { padding-left: 48px; font-size: 0.8rem; color: #666; position: relative; }
+        .submenu { padding-left: 48px; font-size: 0.8rem; color: #8c8c8c; position: relative; }
         .submenu::before { content: ''; position: absolute; left: 28px; top: 50%; width: 10px; height: 1px; background: #444; }
         .submenu:hover { color: #fff; }
-        .submenu.active { color: var(--cyan); border-left: 3px solid transparent; background: transparent; text-shadow: none; }
-        .submenu.active::after { content: '●'; position: absolute; right: 20px; font-size: 0.6rem; color: var(--cyan); }
+        .submenu.active { color: var(--primary-orange); border-left: 3px solid transparent; background: transparent; text-shadow: none; }
+        .submenu.active::after { content: '●'; position: absolute; right: 20px; font-size: 0.6rem; color: var(--primary-orange); }
 
-        .database-btn { margin-top: auto; padding: 20px; background: rgba(160, 0, 0, 0.1); border-top: 1px solid var(--border); cursor: pointer; transition: 0.3s; }
-        .database-btn:hover { background: rgba(160, 0, 0, 0.25); }
-        .database-btn.active { border-left: 3px solid var(--magenta); color: var(--magenta); }
+        .database-btn { margin-top: auto; padding: 20px; background: rgba(199, 0, 57, 0.1); border-top: 1px solid var(--border); cursor: pointer; transition: 0.3s; }
+        .database-btn:hover { background: rgba(199, 0, 57, 0.25); }
+        .database-btn.active { border-left: 3px solid var(--secondary-crimson); color: var(--secondary-crimson); }
         
-        /* Fundo principal com tom avermelhado */
-        .main-content { flex: 1; overflow-y: auto; padding: 30px; background: radial-gradient(circle at 10% 10%, #200505 0%, #05020a 100%); display: flex; flex-direction: column; }
+        .main-content { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; }
         
         .filters-container { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
         .filter-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 130px; }
-        .filter-group label { font-size: 0.7rem; color: var(--cyan); text-transform: uppercase; font-weight: bold; font-family: 'Inter'; }
+        .filter-group label { font-size: 0.7rem; color: var(--primary-orange); text-transform: uppercase; font-weight: bold; font-family: 'Inter'; }
         
-        /* Inputs com foco vermelho */
+        /* Inputs com foco laranja */
         .filter-input { background: #000; border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 0.85rem; outline: none; transition: 0.3s; }
-        .filter-input:focus { border-color: var(--cyan); box-shadow: 0 0 10px rgba(230, 0, 0, 0.3); }
+        .filter-input:focus { border-color: var(--primary-orange); box-shadow: 0 0 10px rgba(255, 87, 34, 0.3); }
         input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
         
-        /* Botão de filtro vermelho */
-        .btn-filter { height: 40px; margin-top: 18px; background: var(--magenta); color: white; border: none; padding: 0 25px; border-radius: 4px; cursor: pointer; font-family: 'Orbitron', sans-serif; transition: 0.3s; }
-        .btn-filter:hover { background: var(--cyan); transform: scale(1.05); }
+        /* Botão de filtro gradiente */
+        .btn-filter { height: 40px; margin-top: 18px; background: linear-gradient(45deg, var(--accent-purple), var(--secondary-crimson)); color: white; border: none; padding: 0 25px; border-radius: 4px; cursor: pointer; font-family: 'Orbitron', sans-serif; transition: 0.3s; }
+        .btn-filter:hover { background: linear-gradient(45deg, var(--secondary-crimson), var(--primary-orange)); transform: scale(1.05); }
 
         .dynamic-filter { display: none; min-width: 160px; }
         #group-master label { color: var(--yellow); }
@@ -92,18 +90,18 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         
         .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 25px; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.4); }
-        .card-header { background: rgba(30, 10, 10, 0.95); padding: 15px 20px; border-bottom: 1px solid var(--border); color: #fff; font-family: 'Inter'; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .card-header { background: rgba(40, 15, 10, 0.95); padding: 15px 20px; border-bottom: 1px solid var(--border); color: #fff; font-family: 'Inter'; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
         
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: 'Inter'; }
-        th { text-align: left; padding: 14px 20px; background: rgba(50, 0, 0, 0.6); color: var(--cyan); border-bottom: 1px solid var(--border); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.75rem; }
+        th { text-align: left; padding: 14px 20px; background: rgba(60, 20, 5, 0.6); color: var(--primary-orange); border-bottom: 1px solid var(--border); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.75rem; }
         td { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; vertical-align: middle; }
-        tr:hover td { background: rgba(255,0,0,0.05); color: #fff; }
+        tr:hover td { background: rgba(255, 87, 34, 0.05); color: #fff; }
 
         /* KPIS */
         .summary-bar { display: flex; gap: 20px; margin-bottom: 25px; flex-wrap: wrap; }
         .summary-card { background: #000; border: 1px solid var(--border); border-radius: 8px; padding: 15px 25px; min-width: 150px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
-        /* Brilho superior do card vermelho */
-        .summary-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+        /* Brilho superior do card laranja */
+        .summary-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary-orange), transparent); }
         .summary-title { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; font-family: 'Inter'; letter-spacing: 0.5px; }
         .summary-value { color: #fff; font-size: 2rem; font-family: 'Orbitron'; font-weight: 700; text-shadow: 0 0 15px rgba(255, 255, 255, 0.1); }
 
@@ -116,16 +114,16 @@
         .chart-bar-fill { height: 100%; border-radius: 6px; transition: width 1s; }
         .chart-value { width: 40px; text-align: right; color: #fff; font-weight: bold; }
         
-        /* MAPA DE CALOR (GRID) - Escala de Vermelhos */
+        /* MAPA DE CALOR (GRID) - Escala Quente (Laranja -> Roxo/Carmesim) */
         .heatmap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; padding: 20px; }
         .heatmap-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; border-radius: 6px; font-size: 0.8rem; color: #fff; transition: 0.3s; border: 1px solid transparent; font-family: 'Orbitron'; }
         .heatmap-cell div:first-child { font-size: 0.9rem; margin-bottom: 2px; }
-        /* Hot = Magenta/Carmesim */
-        .hm-hot { background: rgba(160, 0, 0, 0.4); color: #ffaaaa; border-color: var(--magenta); box-shadow: 0 0 10px rgba(160, 0, 0, 0.3); }
-        /* Warm = Amarelo/Laranja (mantido para contraste) */
-        .hm-warm { background: rgba(255, 215, 0, 0.3); color: var(--yellow); border-color: var(--yellow); box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
-        /* Cool = Vermelho mais claro/suave (antigo ciano) */
-        .hm-cool { background: rgba(230, 0, 0, 0.2); color: var(--cyan); border-color: var(--cyan); }
+        /* Hot = Roxo Quente/Carmesim */
+        .hm-hot { background: rgba(199, 0, 57, 0.4); color: #ffaaaa; border-color: var(--secondary-crimson); box-shadow: 0 0 10px rgba(199, 0, 57, 0.3); }
+        /* Warm = Laranja Vibrante */
+        .hm-warm { background: rgba(255, 87, 34, 0.3); color: var(--primary-orange); border-color: var(--primary-orange); box-shadow: 0 0 10px rgba(255, 87, 34, 0.2); }
+        /* Cool = Amarelo/Laranja claro */
+        .hm-cool { background: rgba(255, 215, 0, 0.2); color: var(--yellow); border-color: var(--yellow); }
 
         /* SCALINK */
         .scalink-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -143,17 +141,16 @@
         .scalink-col { flex: 1; background: #000; border: 1px solid #333; border-radius: 4px; display: flex; flex-direction: column; }
         .scalink-col-header { padding: 10px; background: #000; color: var(--yellow); font-weight: bold; border-bottom: 1px solid #333; text-align: right; font-size: 0.8rem; }
         
-        /* TAGS & BADGES - PALETA REDEFINIDA PARA VERMELHOS */
+        /* TAGS & BADGES - PALETA QUENTE (LARANJA/VERMELHO/ROXO) */
         .tag-source { font-size: 0.65rem; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; font-weight: 700; margin-right: 8px; display: inline-block; min-width: 50px; text-align: center; letter-spacing: 0.5px; box-shadow: 0 0 5px rgba(0,0,0,0.3); }
         
-        /* Tags de Meses (Mantidas cores distintas para diferenciar) */
-        .tag-jul { border: 1px solid #ff0055; color: #ff0055; background: rgba(255, 0, 85, 0.05); }
-        .tag-ago { border: 1px solid #ff9100; color: #ff9100; background: rgba(255, 145, 0, 0.05); }
-        .tag-set { border: 1px solid #ff00e5; color: #ff00e5; background: rgba(255, 0, 229, 0.05); }
-        /* Outubro era azul, agora vermelho vibrante */
-        .tag-out { border: 1px solid var(--cyan); color: var(--cyan); background: rgba(230, 0, 0, 0.05); }
-        .tag-nov { border: 1px solid #7000ff; color: #7000ff; background: rgba(112, 0, 255, 0.05); }
-        .tag-dez { border: 1px solid #00ff88; color: #00ff88; background: rgba(0, 255, 136, 0.05); }
+        .tag-jul { border: 1px solid #C70039; color: #C70039; background: rgba(199, 0, 57, 0.05); }
+        .tag-ago { border: 1px solid #FF5722; color: #FF5722; background: rgba(255, 87, 34, 0.05); }
+        .tag-set { border: 1px solid #900C3F; color: #900C3F; background: rgba(144, 12, 63, 0.05); }
+        /* Outubro agora é Laranja Dourado */
+        .tag-out { border: 1px solid #FFC107; color: #FFC107; background: rgba(255, 193, 7, 0.05); }
+        .tag-nov { border: 1px solid #D81B60; color: #D81B60; background: rgba(216, 27, 96, 0.05); }
+        .tag-dez { border: 1px solid #689F38; color: #689F38; background: rgba(104, 159, 56, 0.05); }
         
         .tag-acao { border: 1px solid #ffd700; color: #ffd700; background: rgba(255, 215, 0, 0.05); }
         .tag-ind { border: 1px solid #fff; color: #fff; background: rgba(255, 255, 255, 0.05); }
@@ -162,27 +159,27 @@
 
         .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; display: inline-block; white-space: nowrap; max-width: 180px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; text-transform: uppercase; border: 1px solid transparent; }
         
-        /* NOVAS CORES DOS BADGES (SUBSTITUINDO AZUIS POR VERMELHOS) */
-        .bdg-bant { background-color: #689F38; color: white; border-color: #558b2f; } /* Verde mantido (positivo) */
-        .bdg-cvc { background-color: #FFEB3B; color: #000; border-color: #FBC02D; } /* Amarelo mantido */
+        /* NOVAS CORES DOS BADGES (SEM AZUL - Paleta Quente) */
+        .bdg-bant { background-color: #689F38; color: white; border-color: #558b2f; } /* Verde (positivo) */
+        .bdg-cvc { background-color: #FFC107; color: #000; border-color: #FFA000; } /* Âmbar */
         
-        /* Vermelhos V4 */
-        .bdg-home { background-color: #C62828; color: white; border-color: #b71c1c; } /* Vermelho Forte */
-        .bdg-live { background-color: #B71C1C; color: white; border-color: #920c0c; } /* Vermelho Escuro (era azul live) */
+        /* Variações de Laranja, Vermelho e Roxo Quente */
+        .bdg-home { background-color: #D84315; color: white; border-color: #BF360C; } /* Laranja Queimado */
+        .bdg-live { background-color: #AD1457; color: white; border-color: #880E4F; } /* Rosa Escuro/Roxo */
         .bdg-nointerest { background-color: #8B0000; color: white; border-color: #500; } /* Vermelho Sangue */
-        .bdg-invalid { background-color: #424242; color: white; border-color: #212121; } /* Cinza */
-        .bdg-return { background-color: #FF4081; color: white; border-color: #C51162; } /* Rosa */
+        .bdg-invalid { background-color: #616161; color: white; border-color: #424242; } /* Cinza Quente */
+        .bdg-return { background-color: #D81B60; color: white; border-color: #C2185B; } /* Pink Quente */
         
-        .bdg-teal { background-color: #D32F2F; color: white; border-color: #C62828; } /* Vermelho Tijolo (era teal) */
-        .bdg-red { background-color: #FF0000; color: white; border-color: #cc0000; } /* Vermelho Puro */
-        .bdg-blue { background-color: #E53935; color: white; border-color: #D32F2F; } /* Vermelho Vibrante (era azul) */
-        .bdg-orange { background-color: #FF8A65; color: white; border-color: #D84315; } /* Laranja */
-        .bdg-brown { background-color: #5D4037; color: white; border-color: #3E2723; } /* Marrom */
-        .bdg-pink { background-color: #F48FB1; color: white; border-color: #EC407A; } /* Rosa Claro */
-        .bdg-gray { background-color: #78909C; color: white; border-color: #546E7A; } /* Cinza Azulado */
+        .bdg-teal { background-color: #E64A19; color: white; border-color: #D84315; } /* Laranja Forte */
+        .bdg-red { background-color: #D32F2F; color: white; border-color: #C62828; } /* Vermelho */
+        .bdg-blue { background-color: #8E24AA; color: white; border-color: #7B1FA2; } /* Roxo Vibrante (era azul) */
+        .bdg-orange { background-color: #FF9800; color: white; border-color: #F57C00; } /* Laranja Claro */
+        .bdg-brown { background-color: #795548; color: white; border-color: #5D4037; } /* Marrom */
+        .bdg-pink { background-color: #F06292; color: white; border-color: #E91E63; } /* Rosa */
+        .bdg-gray { background-color: #78909C; color: white; border-color: #546E7A; } /* Cinza Azulado (Neutro) */
         
-        .bdg-cyan { background-color: #FF5252; color: white; border-color: #FF1744; } /* Vermelho Salmão (era ciano) */
-        .bdg-darkblue { background-color: #9A0007; color: white; border-color: #690005; } /* Carmesim Profundo (era azul escuro) */
+        .bdg-cyan { background-color: #FF5722; color: white; border-color: #E64A19; } /* Laranja V4 Principal (era ciano) */
+        .bdg-darkblue { background-color: #C2185B; color: white; border-color: #AD1457; } /* Roxo Avermelhado (era azul escuro) */
         
         .bdg-default { background: rgba(255,255,255,0.1); color: #ccc; }
 
@@ -192,7 +189,7 @@
     
     <div id="loading-overlay">
         <div class="spinner"></div>
-        <div style="font-family:'Orbitron'; color:var(--cyan); letter-spacing:2px;">CONECTANDO BASES...</div>
+        <div style="font-family:'Orbitron'; color:var(--primary-orange); letter-spacing:2px;">CONECTANDO BASES...</div>
         <div id="loading-text" style="color:#666; font-size:0.8rem; margin-top:10px;">Iniciando integração segura</div>
         <div id="error-log"></div>
     </div>
@@ -227,7 +224,7 @@
         </div>
 
         <div class="database-btn" onclick="switchTab('page-master', this)">
-            <div style="font-family: 'Orbitron'; font-weight: bold; color: var(--magenta); display: flex; align-items: center; gap: 10px;">
+            <div style="font-family: 'Orbitron'; font-weight: bold; color: var(--secondary-crimson); display: flex; align-items: center; gap: 10px;">
                 <i class="fas fa-database"></i> BASE GERAL
             </div>
             <div style="font-size: 0.7rem; color: #666; margin-top: 5px;">Visão Consolidada (Full)</div>
@@ -338,12 +335,12 @@
 
         <section id="page-overview" class="view-section active">
             <div class="summary-bar">
-                <div class="summary-card" style="border-bottom: 3px solid var(--cyan);">
-                    <div class="summary-title" style="color:var(--cyan)">TOTAL DE LEADS</div>
+                <div class="summary-card" style="border-bottom: 3px solid var(--primary-orange);">
+                    <div class="summary-title" style="color:var(--primary-orange)">TOTAL DE LEADS</div>
                     <div class="summary-value" id="ov-total">0</div>
                 </div>
-                <div class="summary-card" style="border-bottom: 3px solid #00ff88;">
-                    <div class="summary-title" style="color:#00ff88">TOTAL ATIVOS</div>
+                <div class="summary-card" style="border-bottom: 3px solid #689F38;">
+                    <div class="summary-title" style="color:#689F38">TOTAL ATIVOS</div>
                     <div class="summary-value" id="ov-active">0</div>
                 </div>
                 <div class="summary-card" style="border-bottom: 3px solid var(--bant-color);">
@@ -374,7 +371,7 @@
                     <div class="chart-container" id="chart-origin"></div>
                 </div>
                 <div class="card" style="grid-column: 1 / -1;">
-                    <div class="card-header"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="card-header"><i class="fas fa-map-marker-alt" style="color:var(--primary-orange)"></i> &nbsp; Densidade Geográfica</div>
                     <div class="chart-container" id="chart-heatmap"></div>
                 </div>
             </div>
@@ -655,12 +652,12 @@
             document.getElementById('ov-bant').innerText = data.filter(i => i.source === 'BANT4').length;
             document.getElementById('ov-conv').innerText = data.filter(i => i.source === 'CONVERTED').length;
 
-            // CHART 1: ORIGEM (Usando a nova cor CYAn que agora é VERMELHO VIBRANTE)
+            // CHART 1: ORIGEM (Usando Laranja Vibrante)
             const counts = {}; data.forEach(i => counts[i.source]=(counts[i.source]||0)+1);
             const prettyNames = { 'IND': 'AG. INDIVIDUAIS', 'ACAO': 'AÇÃO FIM ANO', 'BANT4': 'BANT 4', 'CONVERTED': 'CONVERTIDOS' };
             document.getElementById('chart-origin').innerHTML = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
                 const pct = (v/data.length)*100;
-                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${prettyNames[k]||k}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--cyan);"></div></div><div class="chart-value">${v}</div></div>`;
+                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${prettyNames[k]||k}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--primary-orange);"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
 
             // CHART 2: TOP 10 CONSULTORES
@@ -683,10 +680,10 @@
             const cities = {}; data.forEach(i => { if(i.city && i.city.length > 3) cities[i.city] = (cities[i.city]||0)+1; });
             document.getElementById('chart-cities').innerHTML = Object.entries(cities).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=>{
                 const pct = (v/data.length)*100;
-                return `<div class="chart-row"><div class="chart-label" style="width:120px;" title="${k}">${k.substring(0,18)}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--magenta);"></div></div><div class="chart-value">${v}</div></div>`;
+                return `<div class="chart-row"><div class="chart-label" style="width:120px;" title="${k}">${k.substring(0,18)}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--secondary-crimson);"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
 
-            // CHART 4: FUNIL DE STATUS (Verde mantido para positivo, vermelho para negativo implícito)
+            // CHART 4: FUNIL DE STATUS (Verde para positivo, Laranja para outros)
             const stCounts = {}; 
             data.forEach(i => { 
                 let s = String(i.status).toUpperCase().trim();
@@ -696,12 +693,12 @@
             });
             document.getElementById('chart-funnel').innerHTML = Object.entries(stCounts).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,v])=>{
                 const pct = (v/data.length)*100;
-                // Se o status for positivo, usa verde, senão usa o vermelho vibrante
-                const barColor = (k.includes('BANT') || k.includes('INTERESSE') || k.includes('REUNIÃO')) ? '#00ff88' : 'var(--cyan)';
+                // Se o status for positivo, usa verde, senão usa o laranja vibrante
+                const barColor = (k.includes('BANT') || k.includes('INTERESSE') || k.includes('REUNIÃO')) ? '#689F38' : 'var(--primary-orange)';
                 return `<div class="chart-row"><div class="chart-label" style="width:120px;">${k}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:${barColor};"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
 
-            // CHART 5: MAPA DE CALOR
+            // CHART 5: MAPA DE CALOR (Escala Quente: Amarelo -> Laranja -> Roxo)
             const ufCounts = {};
             data.forEach(i => { if(i.uf && i.uf.length === 2) ufCounts[i.uf] = (ufCounts[i.uf]||0)+1; });
             const maxUf = Math.max(...Object.values(ufCounts));
@@ -739,7 +736,7 @@
         function getStatusBadge(status) {
             const s = String(status).trim().toUpperCase();
             let c = 'bdg-default';
-            // Lógica de cores atualizada para Vermelhos
+            // Lógica de cores atualizada para Palette Quente (SEM AZUL)
             if(s.includes('BANT')) c = 'bdg-bant'; // Verde mantido
             else if(s.includes('CVC')) c = 'bdg-cvc'; // Amarelo mantido
             else if(s.includes('HOME')) c = 'bdg-home';
