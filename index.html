@@ -93,6 +93,14 @@
         .chart-bar-fill { height: 100%; border-radius: 6px; transition: width 1s; }
         .chart-value { width: 40px; text-align: right; color: #fff; font-weight: bold; }
         
+        /* MAPA DE CALOR (GRID) */
+        .heatmap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; padding: 10px; }
+        .heatmap-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #111; border-radius: 6px; font-size: 0.7rem; color: #fff; transition: 0.3s; border: 1px solid transparent; font-family: 'Orbitron'; }
+        .heatmap-cell div:first-child { font-size: 0.8rem; margin-bottom: 2px; }
+        .hm-hot { background: rgba(255, 0, 229, 0.3); color: var(--magenta); border-color: var(--magenta); box-shadow: 0 0 10px rgba(255, 0, 229, 0.2); }
+        .hm-warm { background: rgba(255, 215, 0, 0.3); color: var(--yellow); border-color: var(--yellow); box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+        .hm-cool { background: rgba(0, 242, 255, 0.2); color: var(--cyan); border-color: var(--cyan); }
+
         /* SCALINK */
         .scalink-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .scalink-title { font-size: 1.8rem; font-family: 'Inter'; font-weight: bold; color: white; text-align: center; width: 100%; }
@@ -323,13 +331,20 @@
 
             <div class="overview-grid">
                 <div class="card">
-                    <div class="card-header">Top Consultores (Desempenho)</div>
+                    <div class="card-header">Top 10 Consultores (Ativos)</div>
                     <div class="chart-container" id="chart-consultants"></div>
                 </div>
                 <div class="card">
-                    <div class="card-header">Top Cidades (Interesse)</div>
+                    <div class="card-header">Top 10 Cidades (Interesse)</div>
                     <div class="chart-container" id="chart-cities"></div>
                 </div>
+                 <div class="card" style="grid-column: span 2;">
+                    <div class="card-header" style="background: rgba(255, 0, 229, 0.1); border-bottom: 1px solid var(--magenta); color: var(--magenta);">
+                        <i class="fas fa-map-marker-alt"></i> &nbsp; Mapa de Calor de Leads (Densidade por Estado)
+                    </div>
+                    <div class="chart-container" id="chart-heatmap"></div>
+                </div>
+                
                 <div class="card">
                     <div class="card-header">Funil de Status</div>
                     <div class="chart-container" id="chart-funnel"></div>
@@ -512,12 +527,10 @@
         }
 
         function parseCSV(text) {
-            // REGEX CORRIGIDA: LÊ ATÉ A VIRGULA, IGNORANDO ESPAÇOS DENTRO DO CAMPO
             const lines = text.split('\n').filter(l => l.trim()!=='');
             if(lines.length<2) return [];
             const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,'').toLowerCase());
             return lines.slice(1).map(line => {
-                // Regex: Captura "tudo entre aspas" OU tudo que não é vírgula
                 const values = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
                 if(!values) return null;
                 const obj = {};
@@ -534,17 +547,14 @@
             const findKey = (keywords) => Object.keys(row).find(k => keywords.some(kw => k.includes(kw)));
             let finalSource = source.startsWith('BANT') ? 'BANT4' : source;
 
-            // 1. NOME (SEMPRE PEGA A 2ª COLUNA - INDEX 1)
             const values = Object.values(row);
             let name = values[1] ? values[1].trim() : (values[0] || 'Sem Nome');
 
-            // 2. MASTER/REGIÃO (Busca o valor completo)
             const regionKey = Object.keys(row).find(k => 
                 k.toLowerCase().includes('master') || k.toLowerCase().includes('regi') || k.toLowerCase().includes('consultor')
             );
             let region = row[regionKey] || '-';
 
-            // 3. LOCALIDADE
             const cityKey = findKey(['cidade', 'município', 'local']);
             const ufKey = findKey(['uf', 'estado']);
             let loc = '-';
@@ -601,11 +611,9 @@
                 if(!item.name.toLowerCase().includes(search) && !item.email.toLowerCase().includes(search)) return false;
                 if(source && item.source !== source) return false;
                 if(uf && !item.uf.toUpperCase().includes(uf)) return false;
-                
                 if(statusFilter && statusFilter !== 'todos') {
                     if(!String(item.status).toLowerCase().includes(statusFilter)) return false;
                 }
-
                 if(masterFilter && !String(item.region).includes(masterFilter)) return false;
                 return true;
             });
@@ -628,21 +636,31 @@
                 return `<div class="chart-row"><div class="chart-label" style="width:120px;">${prettyNames[k]||k}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--cyan);"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
 
-            // CHART 2: TOP CONSULTORES
-            const masters = {}; data.forEach(i => { if(i.region && i.region.length > 3) masters[i.region] = (masters[i.region]||0)+1; });
-            document.getElementById('chart-consultants').innerHTML = Object.entries(masters).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>{
+            // CHART 2: TOP 10 CONSULTORES (LIMPANDO INATIVOS/CIDADES)
+            const invalidMasters = ['INATIVO', 'NULL', '-', 'CURITIBA', 'BELO HORIZONTE', 'SÃO PAULO', 'RIO DE JANEIRO', 'BRASILIA'];
+            const masters = {};
+            data.forEach(i => {
+                let reg = i.region ? i.region.trim() : '';
+                // Filtra nomes curtos, inativos e tenta garantir que é um nome de pessoa (tem espaço)
+                if(reg.length > 4 && !invalidMasters.includes(reg.toUpperCase()) && isNaN(reg)) {
+                     if(reg.includes(' ')) { // Assume que nome de pessoa tem espaço
+                         masters[reg] = (masters[reg]||0)+1;
+                     }
+                }
+            });
+            document.getElementById('chart-consultants').innerHTML = Object.entries(masters).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=>{
                 const pct = (v/data.length)*100;
-                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${k.substring(0,18)}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--yellow);"></div></div><div class="chart-value">${v}</div></div>`;
+                return `<div class="chart-row"><div class="chart-label" style="width:120px;" title="${k}">${k.substring(0,18)}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--yellow);"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
 
-            // CHART 3: TOP CIDADES
+            // CHART 3: TOP 10 CIDADES
             const cities = {}; data.forEach(i => { if(i.city && i.city.length > 3) cities[i.city] = (cities[i.city]||0)+1; });
-            document.getElementById('chart-cities').innerHTML = Object.entries(cities).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>{
+            document.getElementById('chart-cities').innerHTML = Object.entries(cities).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=>{
                 const pct = (v/data.length)*100;
-                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${k.substring(0,18)}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--magenta);"></div></div><div class="chart-value">${v}</div></div>`;
+                return `<div class="chart-row"><div class="chart-label" style="width:120px;" title="${k}">${k.substring(0,18)}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--magenta);"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
 
-            // CHART 4: STATUS (LIMPO)
+            // CHART 4: FUNIL DE STATUS
             const stCounts = {}; 
             data.forEach(i => { 
                 let s = String(i.status).toUpperCase().trim();
@@ -650,10 +668,23 @@
                 if(s.length>20) s=s.substring(0,20)+'...';
                 stCounts[s] = (stCounts[s]||0)+1; 
             });
-            document.getElementById('chart-funnel').innerHTML = Object.entries(stCounts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>{
+            document.getElementById('chart-funnel').innerHTML = Object.entries(stCounts).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,v])=>{
                 const pct = (v/data.length)*100;
                 return `<div class="chart-row"><div class="chart-label" style="width:120px;">${k}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:#00ff88;"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
+
+            // CHART 5: MAPA DE CALOR (GRID POR UF)
+            const ufCounts = {};
+            data.forEach(i => { if(i.uf && i.uf.length === 2) ufCounts[i.uf] = (ufCounts[i.uf]||0)+1; });
+            const maxUf = Math.max(...Object.values(ufCounts));
+            
+            const heatMapHTML = '<div class="heatmap-grid">' + Object.entries(ufCounts).sort((a,b)=>b[1]-a[1]).map(([uf, count]) => {
+                let heatClass = 'hm-cool';
+                if(count > maxUf * 0.6) heatClass = 'hm-hot';
+                else if(count > maxUf * 0.3) heatClass = 'hm-warm';
+                return `<div class="heatmap-cell ${heatClass}"><div>${uf}</div><div style="font-weight:bold;">${count}</div></div>`;
+            }).join('') + '</div>';
+            document.getElementById('chart-heatmap').innerHTML = heatMapHTML;
         }
 
         function renderViews(data) {
