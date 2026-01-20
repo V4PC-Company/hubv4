@@ -78,12 +78,14 @@
         td { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; vertical-align: middle; }
         tr:hover td { background: rgba(255,255,255,0.02); color: #fff; }
 
+        /* KPIS */
         .summary-bar { display: flex; gap: 20px; margin-bottom: 25px; flex-wrap: wrap; }
         .summary-card { background: #000; border: 1px solid var(--border); border-radius: 8px; padding: 15px 25px; min-width: 150px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
         .summary-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
         .summary-title { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; font-family: 'Inter'; letter-spacing: 0.5px; }
         .summary-value { color: #fff; font-size: 2rem; font-family: 'Orbitron'; font-weight: 700; text-shadow: 0 0 15px rgba(255, 255, 255, 0.1); }
 
+        /* GRÁFICOS */
         .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .chart-container { padding: 20px; }
         .chart-row { display: flex; align-items: center; margin-bottom: 12px; font-size: 0.8rem; }
@@ -92,19 +94,18 @@
         .chart-bar-fill { height: 100%; border-radius: 6px; transition: width 1s; }
         .chart-value { width: 40px; text-align: right; color: #fff; font-weight: bold; }
         
+        /* SCALINK */
         .scalink-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .scalink-title { font-size: 1.8rem; font-family: 'Inter'; font-weight: bold; color: white; text-align: center; width: 100%; }
         .scalink-kpi { background: #000; border: 1px solid var(--yellow); border-radius: 6px; padding: 10px 20px; width: 120px; text-align: center; }
         .scalink-kpi-title { color: var(--yellow); font-size: 0.65rem; margin-bottom: 5px; }
         .scalink-kpi-val { color: var(--yellow); font-size: 1.5rem; font-family: 'Orbitron'; font-weight: bold; }
-        
         .scalink-table-container { background: #000; border: 1px solid #333; margin-bottom: 20px; border-radius: 4px; overflow: hidden; }
         .scalink-table th { background: #000; color: var(--yellow); border-bottom: 1px solid #333; font-size: 0.7rem; padding: 10px; text-align: center; }
         .scalink-table td { text-align: center; padding: 8px; font-size: 0.8rem; border-bottom: 1px solid #222; }
         .scalink-row-inactive { background: #8b0000; color: white; }
         .scalink-row-active { background: #2e7d32; color: white; }
         .scalink-row-total { background: #000; color: white; font-weight: bold; }
-
         .scalink-split-view { display: flex; gap: 20px; height: 500px; }
         .scalink-col { flex: 1; background: #000; border: 1px solid #333; border-radius: 4px; display: flex; flex-direction: column; }
         .scalink-col-header { padding: 10px; background: #000; color: var(--yellow); font-weight: bold; border-bottom: 1px solid #333; text-align: right; font-size: 0.8rem; }
@@ -115,6 +116,7 @@
         .bar-fill { height: 100%; background: #ccc; display: block; }
         .bar-val { width: 30px; text-align: right; color: #ccc; }
 
+        /* TAGS & BADGES */
         .tag-source { font-size: 0.65rem; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; font-weight: 700; margin-right: 8px; display: inline-block; min-width: 50px; text-align: center; letter-spacing: 0.5px; box-shadow: 0 0 5px rgba(0,0,0,0.3); }
         .tag-jul { border: 1px solid #ff0055; color: #ff0055; background: rgba(255, 0, 85, 0.05); }
         .tag-ago { border: 1px solid #ff9100; color: #ff9100; background: rgba(255, 145, 0, 0.05); }
@@ -128,7 +130,7 @@
         .tag-conv { border: 1px solid var(--yellow); color: var(--yellow); background: rgba(255, 215, 0, 0.05); }
         .tag-sca { border: 1px solid #fff; color: #fff; background: #222; }
 
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; display: inline-block; white-space: nowrap; max-width: 150px; overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
         .st-ativo { color: #00ff88; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.2); }
         .st-inativo { color: #ff4d4d; background: rgba(255, 77, 77, 0.1); border: 1px solid rgba(255, 77, 77, 0.2); }
         .st-negocia { color: #ffd700; background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.2); }
@@ -305,25 +307,8 @@
         </section>
 
         <section id="page1" class="view-section">
-            <div class="summary-bar">
-                <div class="summary-card">
-                    <div class="summary-title">Total de Leads</div>
-                    <div class="summary-value" id="kpi-p1-total">0</div>
-                </div>
-                <div class="summary-card" style="border-bottom: 2px solid #00ff88;">
-                    <div class="summary-title" style="color:#00ff88">Ativos / Implantação</div>
-                    <div class="summary-value" id="kpi-p1-ativos">0</div>
-                </div>
-                <div class="summary-card" style="border-bottom: 2px solid #ff4d4d;">
-                    <div class="summary-title" style="color:#ff4d4d">Perdidos / Inativos</div>
-                    <div class="summary-value" id="kpi-p1-inativos">0</div>
-                </div>
-            </div>
             <div class="card">
-                <div class="card-header">
-                    <span>Base Semestral (Julho a Dezembro)</span>
-                    <i class="fas fa-table" style="color:var(--cyan)"></i>
-                </div>
+                <div class="card-header">Base Semestral (Julho a Dezembro)</div>
                 <div class="table-responsive">
                     <table>
                         <thead><tr><th>Mês</th><th>Nome Completo</th><th>Email</th><th>Localização</th><th>Status</th></tr></thead>
@@ -334,25 +319,8 @@
         </section>
 
         <section id="page2" class="view-section">
-            <div class="summary-bar">
-                <div class="summary-card">
-                    <div class="summary-title">Total de Leads</div>
-                    <div class="summary-value" id="kpi-p2-total">0</div>
-                </div>
-                <div class="summary-card" style="border-bottom: 2px solid #00ff88;">
-                    <div class="summary-title" style="color:#00ff88">Ativos</div>
-                    <div class="summary-value" id="kpi-p2-ativos">0</div>
-                </div>
-                <div class="summary-card" style="border-bottom: 2px solid #ff4d4d;">
-                    <div class="summary-title" style="color:#ff4d4d">Inativos</div>
-                    <div class="summary-value" id="kpi-p2-inativos">0</div>
-                </div>
-            </div>
             <div class="card">
-                <div class="card-header">
-                    <span>Campanha Fim de Ano 2025</span>
-                    <i class="fas fa-bolt" style="color:var(--yellow)"></i>
-                </div>
+                <div class="card-header">Campanha Fim de Ano 2025</div>
                 <div class="table-responsive">
                     <table>
                         <thead><tr><th>Origem</th><th>Nome</th><th>Email</th><th>Telefone</th><th>Região</th><th>Status</th></tr></thead>
@@ -363,25 +331,8 @@
         </section>
 
         <section id="page3" class="view-section">
-            <div class="summary-bar">
-                <div class="summary-card">
-                    <div class="summary-title">Total de Leads</div>
-                    <div class="summary-value" id="kpi-p3-total">0</div>
-                </div>
-                <div class="summary-card" style="border-bottom: 2px solid #00ff88;">
-                    <div class="summary-title" style="color:#00ff88">Ativos</div>
-                    <div class="summary-value" id="kpi-p3-ativos">0</div>
-                </div>
-                <div class="summary-card" style="border-bottom: 2px solid #ff4d4d;">
-                    <div class="summary-title" style="color:#ff4d4d">Inativos</div>
-                    <div class="summary-value" id="kpi-p3-inativos">0</div>
-                </div>
-            </div>
             <div class="card">
-                <div class="card-header">
-                    <span>Leads Agências Individuais</span>
-                    <i class="fas fa-users" style="color:var(--purple)"></i>
-                </div>
+                <div class="card-header">Leads Agências Individuais</div>
                 <div class="table-responsive">
                     <table>
                         <thead><tr><th>Origem</th><th>Nome</th><th>Email</th><th>Cidade/UF</th><th>Status</th></tr></thead>
@@ -392,31 +343,19 @@
         </section>
 
         <section id="page-bant4" class="view-section">
-            <div class="summary-bar">
-                <div class="summary-card" style="border: 1px solid var(--bant-color);">
-                    <div class="summary-title" style="color: var(--bant-color)">LEADS TOTAIS BANT 4</div>
-                    <div class="summary-value" id="kpi-bant4-total" style="color: #fff">0</div>
-                </div>
-            </div>
-            
             <div class="card" style="border-color: var(--bant-color);">
-                <div class="card-header" style="border-bottom-color: var(--bant-color);">
-                    <span style="color: var(--bant-color)">LEADS TOTAIS BANT 4</span>
-                    <i class="fas fa-bullseye" style="color:var(--bant-color)"></i>
-                </div>
+                <div class="card-header" style="border-bottom-color: var(--bant-color);">LEADS TOTAIS BANT 4</div>
                 <div class="table-responsive">
                     <table>
-                        <thead>
-                            <tr>
-                                <th style="color: var(--bant-color)">Cliente</th>
-                                <th style="color: var(--bant-color)">Master / Região</th>
-                                <th style="color: var(--bant-color)">Telefone</th>
-                                <th style="color: var(--bant-color)">Origem do Lead</th>
-                                <th style="color: var(--bant-color)">Motivo Encerramento</th>
-                                <th style="color: var(--bant-color)">Criado Em</th>
-                                <th style="color: var(--bant-color)">Status</th>
-                            </tr>
-                        </thead>
+                        <thead><tr>
+                            <th style="color:var(--bant-color)">Cliente</th>
+                            <th style="color:var(--bant-color)">Master / Região</th>
+                            <th style="color:var(--bant-color)">Telefone</th>
+                            <th style="color:var(--bant-color)">Origem do Lead</th>
+                            <th style="color:var(--bant-color)">Motivo Encerramento</th>
+                            <th style="color:var(--bant-color)">Criado Em</th>
+                            <th style="color:var(--bant-color)">Status</th>
+                        </tr></thead>
                         <tbody id="table-body-bant4"></tbody>
                     </table>
                 </div>
@@ -424,30 +363,18 @@
         </section>
 
         <section id="page-converted" class="view-section">
-            <div class="summary-bar">
-                <div class="summary-card" style="border: 1px solid var(--yellow);">
-                    <div class="summary-title" style="color: var(--yellow)">TOTAL CONVERTIDOS</div>
-                    <div class="summary-value" id="kpi-conv-total" style="color: #fff">0</div>
-                </div>
-            </div>
-            
             <div class="card" style="border-color: var(--yellow);">
-                <div class="card-header" style="border-bottom-color: var(--yellow);">
-                    <span style="color: var(--yellow)">Leads Convertidos | V4 PLACERES & CO</span>
-                    <i class="fas fa-check-circle" style="color:var(--yellow)"></i>
-                </div>
+                <div class="card-header" style="border-bottom-color: var(--yellow);">Leads Convertidos</div>
                 <div class="table-responsive">
                     <table>
-                        <thead>
-                            <tr>
-                                <th style="color: var(--yellow)">Nome Loja</th>
-                                <th style="color: var(--yellow)">Ano Aprovação</th>
-                                <th style="color: var(--yellow)">Trimestre</th>
-                                <th style="color: var(--yellow)">Status</th>
-                                <th style="color: var(--yellow)">Nome Franqueado</th>
-                                <th style="color: var(--yellow)">Email Franqueado</th>
-                            </tr>
-                        </thead>
+                        <thead><tr>
+                            <th style="color:var(--yellow)">Nome Loja</th>
+                            <th style="color:var(--yellow)">Ano Aprovação</th>
+                            <th style="color:var(--yellow)">Trimestre</th>
+                            <th style="color:var(--yellow)">Status</th>
+                            <th style="color:var(--yellow)">Nome Franqueado</th>
+                            <th style="color:var(--yellow)">Email</th>
+                        </tr></thead>
                         <tbody id="table-body-converted"></tbody>
                     </table>
                 </div>
@@ -456,76 +383,29 @@
 
         <section id="page-scalink" class="view-section">
             <div class="scalink-header">
-                <div style="display:flex; align-items:center;">
-                    <div class="scalink-kpi">
-                        <div class="scalink-kpi-title">Leads Totais</div>
-                        <div class="scalink-kpi-val" id="kpi-sca-total">0</div>
-                    </div>
-                </div>
                 <div class="scalink-title">Leads Totais Scalink</div>
-                <div style="font-family:'Orbitron'; font-weight:bold; font-size:1.2rem; color:#fff;">
-                    <i class="fas fa-cube"></i> Placeres <span style="font-size:0.8rem">&Co</span>
-                </div>
             </div>
-
             <div class="scalink-table-container">
                 <table class="scalink-table">
-                    <thead>
-                        <tr>
-                            <th>Situação Cadastro</th>
-                            <th>Lead</th>
-                            <th>Reunião</th>
-                            <th>Contato Ini...</th>
-                            <th>null</th>
-                            <th>Definição P...</th>
-                            <th>Comitê Exp...</th>
-                            <th>Lead Multi...</th>
-                            <th>Franq...</th>
-                            <th style="background:#000; color:#fff;">Total ge...</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Situação</th><th>Lead</th><th>Reunião</th><th>Contato</th><th>Definição</th><th>Comitê</th><th>Multi</th><th>Franq</th><th>Total</th></tr></thead>
                     <tbody id="scalink-funnel-body"></tbody>
                 </table>
             </div>
-
             <div class="scalink-split-view">
                 <div class="scalink-col">
-                    <div class="scalink-col-header" style="display:flex; justify-content:space-between; text-align:left;">
-                        <span>Nome</span> <span>Email</span> <span style="color:var(--yellow)">Estado...</span>
-                    </div>
-                    <div style="overflow-y:auto; flex:1;">
-                        <table style="width:100%;">
-                            <tbody id="scalink-list-body"></tbody>
-                        </table>
-                    </div>
-                    <div style="padding:10px; text-align:right; font-size:0.7rem; color:#666; border-top:1px solid #222;">
-                        1 - 100 / <span id="sca-list-count">0</span>
-                    </div>
+                    <div class="scalink-col-header">Lista de Leads</div>
+                    <div style="overflow-y:auto; flex:1;"><table style="width:100%;"><tbody id="scalink-list-body"></tbody></table></div>
                 </div>
-
                 <div class="scalink-col">
-                    <div class="scalink-col-header">Situação Cadastro / Nome</div>
-                    <div style="display:flex; justify-content:space-between; padding:10px; font-size:0.7rem; color:#999;">
-                        <span>Estado de Intere...</span>
-                        <span>Ativo / Inativo</span>
-                    </div>
+                    <div class="scalink-col-header">Gráfico por Estado</div>
                     <div style="overflow-y:auto; flex:1;" id="scalink-chart-body"></div>
                 </div>
             </div>
         </section>
 
         <section id="page-master" class="view-section">
-            <div class="summary-bar">
-                <div class="summary-card" style="border: 1px solid var(--magenta);">
-                    <div class="summary-title" style="color:var(--magenta)">REGISTROS TOTAIS (FULL DB)</div>
-                    <div class="summary-value" id="kpi-master-total">0</div>
-                </div>
-            </div>
             <div class="card">
-                <div class="card-header">
-                    <span>Master Database (Visão Unificada)</span>
-                    <i class="fas fa-database" style="color:var(--magenta)"></i>
-                </div>
+                <div class="card-header">Master Database (Full)</div>
                 <div class="table-responsive">
                     <table>
                         <thead><tr><th>Origem</th><th>Nome / Cliente</th><th>Local / Região</th><th>Email / Contato</th><th>Status</th></tr></thead>
@@ -538,22 +418,18 @@
     </main>
 
     <script>
-        // CONFIGURAÇÃO DOS LINKS REAIS
         const PROXY_URL = 'https://corsproxy.io/?';
         const SHEET_URLS = {
-            // LEADS GERAIS V4 (Semestral)
             JUL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=772320362&single=true&output=csv',
             AGO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=401963441&single=true&output=csv',
             SET: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=2109863438&single=true&output=csv',
             OUT: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1372031695&single=true&output=csv',
             NOV: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1335882778&single=true&output=csv',
             DEZ: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=36750990&single=true&output=csv',
-            
-            // AÇÕES E INDIVIDUAIS
             ACAO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=410178243&single=true&output=csv',
             IND: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1794727193&single=true&output=csv',
-
-            // LEADS BANT 4 (COMPLETO)
+            
+            // BANT 4
             BANT_MAR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=248606401&single=true&output=csv',
             BANT_ABR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=143072328&single=true&output=csv',
             BANT_MAI: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=1603044254&single=true&output=csv',
@@ -567,75 +443,45 @@
             BANT_JAN26: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=467308060&single=true&output=csv'
         };
 
-        const MASTERS_LIST = [
-            "Milene Cristina Bartolli", "Kerolayne Viana", "Ariane Luz da Rocha", "Frederico Omar Castel...",
-            "MG - Julio C. Machado", "Julio C. Machado", "Helio Gomes Cruz Ra...", "Eugênio Monteiro",
-            "Grupo Expansão RJ", "Marcela Monteiro", "PA / MA – Luiz Walter", "AM / RO - Marcio Bar...",
-            "ES - Serguey Junior", "SP-VP-Osasco – Carl...", "AC - Junior Lavor", "GO - Frederico Oma...",
-            "SC - Vanderli Comin...", "RJ - Grupo Expansão...", "PR - Grupo Expansão...", "MS – Otávio Pazin",
-            "RS – Grupo Expansão...", "BA - Marcela Montei...", "MT - Carlos Wolff", "SP Interior - Bruno G..."
-        ];
+        const MASTERS_LIST = ["Milene Cristina Bartolli", "Kerolayne Viana", "Ariane Luz da Rocha", "Frederico Omar Castel...", "MG - Julio C. Machado", "Julio C. Machado", "Helio Gomes Cruz Ra...", "Eugênio Monteiro", "Grupo Expansão RJ", "Marcela Monteiro", "PA / MA – Luiz Walter", "AM / RO - Marcio Bar...", "ES - Serguey Junior", "SP-VP-Osasco – Carl...", "AC - Junior Lavor", "GO - Frederico Oma...", "SC - Vanderli Comin...", "RJ - Grupo Expansão...", "PR - Grupo Expansão...", "MS – Otávio Pazin", "RS – Grupo Expansão...", "BA - Marcela Montei...", "MT - Carlos Wolff", "SP Interior - Bruno G..."];
 
         let masterDB = [];
 
-        window.onload = () => {
-            loadRealData(); 
-            populateMasterSelect();
-        };
+        window.onload = () => { loadRealData(); populateMasterSelect(); };
 
         async function loadRealData() {
             const loadingText = document.getElementById('loading-text');
-            const errorLog = document.getElementById('error-log');
             const keys = Object.keys(SHEET_URLS);
-            
             try {
                 const promises = keys.map(async (key) => {
                     loadingText.innerText = `Baixando planilha: ${key}...`;
-                    const cacheBuster = `&_t=${new Date().getTime()}`;
-                    const finalUrl = PROXY_URL + encodeURIComponent(SHEET_URLS[key] + cacheBuster);
-                    
+                    const finalUrl = PROXY_URL + encodeURIComponent(SHEET_URLS[key] + `&_t=${new Date().getTime()}`);
                     const data = await fetchCSV(finalUrl, key);
                     return data.map(row => normalizeData(row, key));
                 });
-
                 const results = await Promise.all(promises);
                 masterDB = results.flat().filter(item => item.name && item.name !== 'Sem Nome');
-                
                 loadingText.innerText = 'Processando dados...';
-                applyFilters(); 
-                
-                setTimeout(() => { 
-                    document.getElementById('loading-overlay').style.opacity = '0'; 
-                    setTimeout(()=>document.getElementById('loading-overlay').style.display='none', 500); 
-                }, 500);
-
+                applyFilters();
+                setTimeout(() => { document.getElementById('loading-overlay').style.opacity='0'; setTimeout(()=>document.getElementById('loading-overlay').style.display='none',500);},500);
             } catch (error) {
-                console.error(error);
-                loadingText.innerText = 'Erro ao carregar. Veja o log abaixo.';
-                loadingText.style.color = 'red';
-                document.querySelector('.spinner').style.borderColor = 'red';
-                document.querySelector('.spinner').style.animation = 'none';
-                errorLog.style.display = 'block';
-                errorLog.innerText = `ERRO TÉCNICO: ${error.message}`;
+                document.getElementById('error-log').style.display='block';
+                document.getElementById('error-log').innerText = `Erro: ${error.message}`;
             }
         }
 
-        async function fetchCSV(url, key) {
-            try {
-                const res = await fetch(url);
-                if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
-                const text = await res.text();
-                if(text.trim().startsWith('<!DOCTYPE html>')) throw new Error('O link retornou HTML. Verifique a publicação.');
-                return parseCSV(text);
-            } catch (e) { 
-                throw new Error(`Falha em ${key}: ${e.message}`);
-            }
+        async function fetchCSV(url) {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('HTTP Error');
+            const text = await res.text();
+            if(text.trim().startsWith('<!DOCTYPE')) throw new Error('HTML retornado');
+            return parseCSV(text);
         }
 
         function parseCSV(text) {
-            const lines = text.split('\n').filter(l => l.trim() !== '');
-            if (lines.length < 2) return [];
-            const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+            const lines = text.split('\n').filter(l => l.trim()!=='');
+            if(lines.length<2) return [];
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,'').toLowerCase());
             return lines.slice(1).map(line => {
                 const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
                 if(!values) return null;
@@ -646,49 +492,36 @@
                     obj[h] = val;
                 });
                 return obj;
-            }).filter(i => i !== null);
+            }).filter(i => i!==null);
         }
 
         function normalizeData(row, source) {
             const findKey = (keywords) => Object.keys(row).find(k => keywords.some(kw => k.includes(kw)));
-            
-            // Lógica de Fonte
-            let finalSource = source;
-            if (source.startsWith('BANT')) finalSource = 'BANT4';
-            
-            // 1. NOME COMPLETO (Busca agressiva)
-            // Procura por todas as variações possíveis para garantir que o nome venha
-            const nameKey = findKey(['nome completo', 'nome do lead', 'cliente', 'nome fantasia', 'nome', 'lead name', 'full name', 'lead']);
-            const finalName = row[nameKey] || row[Object.keys(row)[0]] || 'Sem Nome'; // Fallback para 1ª coluna
+            let finalSource = source.startsWith('BANT') ? 'BANT4' : source;
 
-            // 2. LOCALIDADE (Combina Cidade + UF se possível)
-            const cityKey = findKey(['cidade', 'município', 'local', 'city']);
-            const ufKey = findKey(['uf', 'estado', 'state']);
-            let finalLoc = '-';
-            
-            if (row[cityKey] && row[ufKey]) finalLoc = `${row[cityKey]} - ${row[ufKey]}`;
-            else if (row[cityKey]) finalLoc = row[cityKey];
-            else if (row[ufKey]) finalLoc = row[ufKey];
-            // Se ainda for traço, tenta pegar "Região" ou "Regional"
-            if (finalLoc === '-' || finalLoc === 'null') {
-                const regionFallback = row[findKey(['regiao', 'regional', 'localidade'])] || '-';
-                if(regionFallback !== '-') finalLoc = regionFallback;
-            }
+            // 1. NOME COMPLETO - Busca agressiva
+            const nameKey = findKey(['nome completo', 'nome do lead', 'cliente', 'nome fantasia', 'nome', 'lead name', 'full name']);
+            let name = row[nameKey] || row[Object.keys(row)[0]] || 'Sem Nome'; // Fallback: 1ª coluna
 
-            // 3. MASTER (Busca agressiva)
-            const regionKey = findKey(['master', 'região', 'regional', 'consultor', 'responsável']);
-            
+            // 2. LOCALIDADE - Tenta juntar Cidade + UF
+            const cityKey = findKey(['cidade', 'município', 'local']);
+            const ufKey = findKey(['uf', 'estado']);
+            let loc = '-';
+            if(row[cityKey] && row[ufKey]) loc = `${row[cityKey]} - ${row[ufKey]}`;
+            else if(row[cityKey]) loc = row[cityKey];
+            else if(row[ufKey]) loc = row[ufKey];
+            if(loc === '-' || loc === 'null') loc = row[findKey(['regiao', 'regional'])] || '-';
+
             return {
                 source: finalSource,
-                name: finalName,
+                name: name,
                 email: row[findKey(['email', 'mail'])] || '-',
                 phone: row[findKey(['tel', 'cel', 'phone'])] || '-',
+                displayLoc: loc,
                 city: row[cityKey] || '-',
                 uf: row[ufKey] || '-',
-                // Campo "Local" unificado para exibição
-                displayLoc: finalLoc, 
-                status: row[findKey(['status', 'fase', 'situação', 'etapa'])] || 'Ativo',
-                region: row[regionKey] || '-', 
+                status: row[findKey(['status', 'fase', 'situação'])] || 'Ativo',
+                region: row[findKey(['master', 'região', 'regional', 'consultor'])] || '-',
                 origin: row[findKey(['origem'])] || '-', 
                 reason: row[findKey(['motivo', 'encerramento'])] || '-', 
                 createdAt: row[findKey(['data', 'date', 'criado'])] || new Date().toISOString().split('T')[0]
@@ -696,66 +529,44 @@
         }
 
         function populateMasterSelect() {
-            const select = document.getElementById('selectMaster');
-            MASTERS_LIST.forEach(m => {
-                const opt = document.createElement('option');
-                opt.value = m;
-                opt.innerText = m;
-                select.appendChild(opt);
-            });
+            const s = document.getElementById('selectMaster');
+            MASTERS_LIST.forEach(m => { const o=document.createElement('option'); o.value=m; o.innerText=m; s.appendChild(o); });
         }
 
         function switchTab(pageId, btn) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(el=>el.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.menu-item, .submenu').forEach(el=>el.classList.remove('active'));
+            if(btn.classList.contains('menu-item')||btn.classList.contains('submenu')) btn.classList.add('active');
             
-            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.submenu').forEach(el => el.classList.remove('active'));
-            document.querySelector('.database-btn').classList.remove('active');
-            
-            if (btn.classList.contains('menu-item') || btn.classList.contains('submenu')) btn.classList.add('active');
-            else btn.classList.add('active');
-
-            const masterGroup = document.getElementById('group-master');
-            const yearGroup = document.getElementById('group-year');
-            const quarterGroup = document.getElementById('group-quarter');
-            masterGroup.style.display = 'none';
-            yearGroup.style.display = 'none';
-            quarterGroup.style.display = 'none';
-
-            if (pageId === 'page-bant4') masterGroup.style.display = 'flex';
-            else if (pageId === 'page-converted') { yearGroup.style.display = 'flex'; quarterGroup.style.display = 'flex'; }
+            ['group-master','group-year','group-quarter'].forEach(id=>document.getElementById(id).style.display='none');
+            if(pageId==='page-bant4') document.getElementById('group-master').style.display='flex';
+            else if(pageId==='page-converted') { document.getElementById('group-year').style.display='flex'; document.getElementById('group-quarter').style.display='flex'; }
         }
 
-        function getSafeValue(id) {
-            const el = document.getElementById(id);
-            return el ? el.value.toLowerCase() : '';
-        }
+        function getSafeValue(id) { const el=document.getElementById(id); return el?el.value.toLowerCase():''; }
 
         function applyFilters() {
             const search = getSafeValue('inputSearch');
-            const source = document.getElementById('selectSource') ? document.getElementById('selectSource').value : '';
-            const uf = document.getElementById('selectUF') ? document.getElementById('selectUF').value : '';
-            const cityFilter = getSafeValue('inputCity');
+            const source = document.getElementById('selectSource').value;
+            const uf = document.getElementById('selectUF').value;
             const statusFilter = getSafeValue('selectStatus');
-            const masterFilter = document.getElementById('selectMaster') ? document.getElementById('selectMaster').value : '';
-            const dateStart = document.getElementById('inputDateStart') ? document.getElementById('inputDateStart').value : '';
-            const dateEnd = document.getElementById('inputDateEnd') ? document.getElementById('inputDateEnd').value : '';
+            const masterFilter = document.getElementById('selectMaster').value;
+            const dateStart = document.getElementById('inputDateStart').value;
+            const dateEnd = document.getElementById('inputDateEnd').value;
 
             const filtered = masterDB.filter(item => {
-                if(dateStart && dateEnd && item.createdAt) {
-                    if(item.createdAt < dateStart || item.createdAt > dateEnd) return false;
-                }
-                
+                if(dateStart && dateEnd && item.createdAt && (item.createdAt < dateStart || item.createdAt > dateEnd)) return false;
                 if(!item.name.toLowerCase().includes(search) && !item.email.toLowerCase().includes(search)) return false;
-
                 if(source && item.source !== source) return false;
                 if(uf && !item.uf.toUpperCase().includes(uf)) return false;
-                if(cityFilter && !item.city.toLowerCase().includes(cityFilter)) return false;
-                if(statusFilter && !String(item.status).toLowerCase().includes(statusFilter)) return false;
+                
+                // Filtro Status Exato (se selecionado)
+                if(statusFilter && statusFilter !== 'todos') {
+                    if(!String(item.status).toLowerCase().includes(statusFilter)) return false;
+                }
 
                 if(masterFilter && !String(item.region).includes(masterFilter)) return false;
-
                 return true;
             });
 
@@ -765,92 +576,66 @@
 
         function renderOverview(data) {
             document.getElementById('ov-total').innerText = data.length;
-            document.getElementById('ov-active').innerText = data.filter(i => String(i.status).toLowerCase().match(/ativo|implantação|qualificado|interesse/)).length;
+            document.getElementById('ov-active').innerText = data.filter(i => String(i.status).toLowerCase().match(/interesse|negociação|êxito/)).length;
             document.getElementById('ov-bant').innerText = data.filter(i => i.source === 'BANT4').length;
             document.getElementById('ov-conv').innerText = data.filter(i => i.source === 'CONVERTED').length;
 
-            const counts = {};
-            data.forEach(i => { counts[i.source] = (counts[i.source] || 0) + 1; });
-            
+            const counts = {}; data.forEach(i => counts[i.source]=(counts[i.source]||0)+1);
             const prettyNames = { 'IND': 'AG. INDIVIDUAIS', 'ACAO': 'AÇÃO FIM ANO', 'BANT4': 'BANT 4', 'CONVERTED': 'CONVERTIDOS' };
-
-            const chartOrigin = document.getElementById('chart-origin');
-            chartOrigin.innerHTML = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([key, val]) => {
-                const pct = (val / data.length) * 100;
-                const label = prettyNames[key] || key; 
-                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${label}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--cyan);"></div></div><div class="chart-value">${val}</div></div>`;
+            
+            document.getElementById('chart-origin').innerHTML = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
+                const pct = (v/data.length)*100;
+                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${prettyNames[k]||k}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--cyan);"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
 
-            const stCounts = {};
+            const stCounts = {}; 
             data.forEach(i => { 
                 let s = String(i.status).toUpperCase().trim();
-                // LIMPEZA DE SUJEIRA DO GRÁFICO (Remove "5", "null", "-", números soltos)
-                if(!s || s === 'NULL' || s === '-' || !isNaN(s) || s.length < 3) return;
-                if(s.length > 20) s = s.substring(0,20) + '...';
-                stCounts[s] = (stCounts[s] || 0) + 1; 
+                // LIMPEZA DE STATUS (Remove números soltos, nulos, etc)
+                if(!s || s==='NULL' || s==='-' || !isNaN(s) || s.length<3) return;
+                if(s.length>20) s=s.substring(0,20)+'...';
+                stCounts[s] = (stCounts[s]||0)+1; 
             });
-            const chartStatus = document.getElementById('chart-status');
-            chartStatus.innerHTML = Object.entries(stCounts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([key, val]) => {
-                const pct = (val / data.length) * 100;
-                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${key}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:#00ff88;"></div></div><div class="chart-value">${val}</div></div>`;
+            
+            document.getElementById('chart-status').innerHTML = Object.entries(stCounts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>{
+                const pct = (v/data.length)*100;
+                return `<div class="chart-row"><div class="chart-label" style="width:120px;">${k}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:#00ff88;"></div></div><div class="chart-value">${v}</div></div>`;
             }).join('');
         }
 
         function renderViews(data) {
-            const p1Data = data.filter(i => ['JUL','AGO','SET','OUT','NOV','DEZ'].includes(i.source));
-            renderTable('table-body-p1', p1Data, i => `<td><span class="tag-source tag-${i.source.toLowerCase()}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.email}</td><td>${i.displayLoc}</td><td>${getStatusBadge(i.status)}</td>`);
-            document.getElementById('kpi-p1-total').innerText = p1Data.length;
-            document.getElementById('kpi-p1-ativos').innerText = p1Data.filter(i => i.status.toLowerCase().match(/ativo|implantação/)).length;
-            document.getElementById('kpi-p1-inativos').innerText = p1Data.filter(i => i.status.toLowerCase().match(/inativo|perdido/)).length;
-
-            const p2Data = data.filter(i => i.source === 'ACAO');
-            renderTable('table-body-p2', p2Data, i => `<td><span class="tag-source tag-acao">FIM ANO</span></td><td><b>${i.name}</b></td><td>${i.email}</td><td>${i.phone}</td><td>${i.displayLoc}</td><td>${getStatusBadge(i.status)}</td>`);
-            document.getElementById('kpi-p2-total').innerText = p2Data.length;
-            document.getElementById('kpi-p2-ativos').innerText = p2Data.filter(i => i.status.toLowerCase().includes('ativo')).length;
-            document.getElementById('kpi-p2-inativos').innerText = p2Data.filter(i => i.status.toLowerCase().includes('inativo')).length;
-
-            const p3Data = data.filter(i => i.source === 'IND');
-            renderTable('table-body-p3', p3Data, i => `<td><span class="tag-source tag-ind">IND</span></td><td><b>${i.name}</b></td><td>${i.email}</td><td>${i.displayLoc}</td><td>${getStatusBadge(i.status)}</td>`);
-            document.getElementById('kpi-p3-total').innerText = p3Data.length;
-            document.getElementById('kpi-p3-ativos').innerText = p3Data.filter(i => i.status.toLowerCase().includes('ativo')).length;
-            document.getElementById('kpi-p3-inativos').innerText = p3Data.filter(i => i.status.toLowerCase().includes('inativo')).length;
-
-            const bantData = data.filter(i => i.source === 'BANT4');
-            renderTable('table-body-bant4', bantData, i => `<td>${i.name}</td><td>${i.region}</td><td>${i.phone}</td><td>${i.origin}</td><td><span class="st-bant">${i.reason}</span></td><td>${i.createdAt}</td><td>${getStatusBadge(i.status)}</td>`);
-            document.getElementById('kpi-bant4-total').innerText = bantData.length;
-
-            const convData = data.filter(i => i.source === 'CONVERTED');
-            renderTable('table-body-converted', convData, i => `<td><b>${i.name}</b></td><td>-</td><td>-</td><td>${getStatusBadge(i.status)}</td><td>-</td><td>${i.email}</td>`);
-            document.getElementById('kpi-conv-total').innerText = convData.length;
-
-            const scaData = data.filter(i => i.source === 'SCALINK');
-            document.getElementById('kpi-sca-total').innerText = scaData.length;
-            document.getElementById('sca-list-count').innerText = scaData.length;
+            // Renderizações por aba
+            const p1 = data.filter(i=>['JUL','AGO','SET','OUT','NOV','DEZ'].includes(i.source));
+            renderTable('table-body-p1', p1, i=>`<td><span class="tag-source tag-${i.source.toLowerCase()}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.email}</td><td>${i.displayLoc}</td><td>${getStatusBadge(i.status)}</td>`);
             
-            document.getElementById('scalink-list-body').innerHTML = scaData.map((i, idx) => `
-                <tr style="border-bottom:1px solid #222; font-size:0.75rem;"><td style="padding:10px; width:30px;">${idx+1}.</td><td>${i.name}</td><td style="color:#888;">${i.email}</td><td style="text-align:right;">${i.uf}</td></tr>
-            `).join('');
-
-            renderTable('table-body-master', data, i => `<td><span class="tag-source tag-${i.source.toLowerCase().substring(0,3)}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.displayLoc}</td><td>${i.email} <br><small style="color:#666">${i.phone}</small></td><td>${getStatusBadge(i.status)}</td>`);
-            document.getElementById('kpi-master-total').innerText = data.length;
+            const p2 = data.filter(i=>i.source==='ACAO');
+            renderTable('table-body-p2', p2, i=>`<td><span class="tag-source tag-acao">FIM ANO</span></td><td><b>${i.name}</b></td><td>${i.email}</td><td>${i.phone}</td><td>${i.displayLoc}</td><td>${getStatusBadge(i.status)}</td>`);
+            
+            const p3 = data.filter(i=>i.source==='IND');
+            renderTable('table-body-p3', p3, i=>`<td><span class="tag-source tag-ind">IND</span></td><td><b>${i.name}</b></td><td>${i.email}</td><td>${i.displayLoc}</td><td>${getStatusBadge(i.status)}</td>`);
+            
+            const p4 = data.filter(i=>i.source==='BANT4');
+            renderTable('table-body-bant4', p4, i=>`<td>${i.name}</td><td>${i.region}</td><td>${i.phone}</td><td>${i.origin}</td><td><span class="st-bant">${i.reason}</span></td><td>${i.createdAt}</td><td>${getStatusBadge(i.status)}</td>`);
+            
+            // Outros...
+            renderTable('table-body-master', data, i=>`<td><span class="tag-source tag-${i.source.toLowerCase().substring(0,3)}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.displayLoc}</td><td>${i.email}</td><td>${getStatusBadge(i.status)}</td>`);
         }
 
         function renderTable(id, data, tpl) {
-            const tbody = document.getElementById(id);
-            tbody.innerHTML = data.length ? "" : "<tr><td colspan='10' style='text-align:center; padding:30px; opacity:0.5;'>Nenhum registro encontrado.</td></tr>";
-            data.forEach(item => { const tr = document.createElement('tr'); tr.innerHTML = tpl(item); tbody.appendChild(tr); });
+            document.getElementById(id).innerHTML = data.length ? "" : "<tr><td colspan='10' style='text-align:center; padding:30px; opacity:0.5;'>Nenhum registro encontrado.</td></tr>";
+            data.forEach(item => { const tr = document.createElement('tr'); tr.innerHTML = tpl(item); document.getElementById(id).appendChild(tr); });
         }
 
         function getStatusBadge(status) {
             const s = String(status).toLowerCase();
             let className = '';
-            if(s.includes('ativo') || s.includes('implantação') || s.includes('interesse') || s.includes('êxito')) className = 'st-ativo';
-            else if(s.includes('inativo') || s.includes('perdido') || s.includes('declinou') || s.includes('sem retorno')) className = 'st-inativo';
-            else if(s.includes('negocia')) className = 'st-negocia';
+            if(s.match(/interesse|êxito|implantação|ativo/)) className = 'st-ativo';
+            else if(s.match(/sem retorno|declinou|inativo|perdido/)) className = 'st-inativo';
+            else if(s.match(/negociação/)) className = 'st-negocia';
             return `<span class="status-badge ${className}">${status}</span>`;
         }
 
-        ['inputSearch', 'selectSource', 'selectUF', 'inputCity', 'selectStatus', 'selectMaster', 'selectYear', 'selectQuarter', 'inputDateStart', 'inputDateEnd'].forEach(id => {
+        ['inputSearch', 'selectSource', 'selectUF', 'selectStatus', 'selectMaster', 'selectYear', 'selectQuarter', 'inputDateStart', 'inputDateEnd'].forEach(id => {
             const el = document.getElementById(id);
             if(el) el.addEventListener(id.includes('input') ? 'input' : 'change', applyFilters);
         });
