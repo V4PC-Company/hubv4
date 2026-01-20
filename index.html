@@ -306,7 +306,6 @@
                     <div class="card-header">Distribuição por Origem</div>
                     <div class="chart-container" id="chart-origin"></div>
                 </div>
-
                 <div class="card">
                     <div class="card-header">Saúde da Base (Status)</div>
                     <div class="chart-container" id="chart-status"></div>
@@ -549,17 +548,32 @@
 
     <script>
         // CONFIGURAÇÃO DOS LINKS REAIS
-        // USANDO CORSPROXY.IO PARA MAIOR ESTABILIDADE
         const PROXY_URL = 'https://corsproxy.io/?';
         const SHEET_URLS = {
+            // LEADS GERAIS V4 (Semestral)
             JUL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=772320362&single=true&output=csv',
             AGO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=401963441&single=true&output=csv',
             SET: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=2109863438&single=true&output=csv',
             OUT: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1372031695&single=true&output=csv',
             NOV: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1335882778&single=true&output=csv',
             DEZ: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=36750990&single=true&output=csv',
+            
+            // AÇÕES E INDIVIDUAIS
             ACAO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=410178243&single=true&output=csv',
-            IND: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1794727193&single=true&output=csv'
+            IND: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1794727193&single=true&output=csv',
+
+            // LEADS BANT 4 (Novos Links)
+            BANT_MAR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=248606401&single=true&output=csv',
+            BANT_ABR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=143072328&single=true&output=csv',
+            BANT_MAI: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=1603044254&single=true&output=csv',
+            BANT_JUN: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=1506135346&single=true&output=csv',
+            BANT_JUL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=1984064688&single=true&output=csv',
+            BANT_AGO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=1894726181&single=true&output=csv',
+            BANT_SET: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=532605024&single=true&output=csv',
+            BANT_OUT: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=71391251&single=true&output=csv',
+            BANT_NOV: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=932328819&single=true&output=csv',
+            BANT_DEZ: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=2662239&single=true&output=csv',
+            BANT_JAN26: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=467308060&single=true&output=csv'
         };
 
         const MASTERS_LIST = [
@@ -586,7 +600,6 @@
             try {
                 const promises = keys.map(async (key) => {
                     loadingText.innerText = `Baixando planilha: ${key}...`;
-                    // Adiciona timestamp para evitar cache do proxy
                     const cacheBuster = `&_t=${new Date().getTime()}`;
                     const finalUrl = PROXY_URL + encodeURIComponent(SHEET_URLS[key] + cacheBuster);
                     
@@ -598,7 +611,7 @@
                 masterDB = results.flat().filter(item => item.name && item.name !== 'Sem Nome');
                 
                 loadingText.innerText = 'Processando dados...';
-                applyFilters(); // Renderiza
+                applyFilters(); 
                 
                 setTimeout(() => { 
                     document.getElementById('loading-overlay').style.opacity = '0'; 
@@ -622,7 +635,6 @@
                 const res = await fetch(url);
                 if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
                 const text = await res.text();
-                // Verificação básica se retornou HTML em vez de CSV
                 if(text.trim().startsWith('<!DOCTYPE html>')) throw new Error('O link retornou uma página HTML, não um CSV. Verifique a publicação.');
                 return parseCSV(text);
             } catch (e) { 
@@ -650,15 +662,22 @@
         function normalizeData(row, source) {
             const findKey = (keywords) => Object.keys(row).find(k => keywords.some(kw => k.includes(kw)));
             
+            // Define o "Tipo" de fonte
+            let finalSource = source;
+            if (source.startsWith('BANT')) finalSource = 'BANT4';
+            
             return {
-                source: source,
+                source: finalSource,
+                // Procura por "Nome" ou "Cliente"
                 name: row[findKey(['nome', 'cliente', 'lead', 'name'])] || 'Sem Nome',
                 email: row[findKey(['email', 'mail'])] || '-',
                 phone: row[findKey(['tel', 'cel', 'phone'])] || '-',
                 city: row[findKey(['cidade', 'city'])] || '-',
                 uf: row[findKey(['uf', 'estado', 'state'])] || '-',
                 status: row[findKey(['status', 'fase', 'situação'])] || 'Ativo',
-                region: row[findKey(['regiao', 'master', 'regional'])] || '-', 
+                region: row[findKey(['regiao', 'master', 'regional'])] || '-',
+                origin: row[findKey(['origem'])] || '-', 
+                reason: row[findKey(['motivo', 'encerramento'])] || '-', 
                 createdAt: row[findKey(['data', 'date', 'criado'])] || new Date().toISOString().split('T')[0]
             };
         }
@@ -695,16 +714,14 @@
             else if (pageId === 'page-converted') { yearGroup.style.display = 'flex'; quarterGroup.style.display = 'flex'; }
         }
 
-        // FUNÇÃO SEGURA PARA PEGAR VALORES DOS FILTROS
         function getSafeValue(id) {
             const el = document.getElementById(id);
             return el ? el.value.toLowerCase() : '';
         }
 
         function applyFilters() {
-            // Usa função segura para evitar crash se o elemento não existir
             const search = getSafeValue('inputSearch');
-            const source = document.getElementById('selectSource') ? document.getElementById('selectSource').value : ''; // Case sensitive para source
+            const source = document.getElementById('selectSource') ? document.getElementById('selectSource').value : '';
             const uf = document.getElementById('selectUF') ? document.getElementById('selectUF').value : '';
             const cityFilter = getSafeValue('inputCity');
             const statusFilter = getSafeValue('selectStatus');
@@ -778,8 +795,9 @@
             document.getElementById('kpi-p3-ativos').innerText = p3Data.filter(i => i.status.toLowerCase().includes('ativo')).length;
             document.getElementById('kpi-p3-inativos').innerText = p3Data.filter(i => i.status.toLowerCase().includes('inativo')).length;
 
+            // RENDERIZAÇÃO CORRIGIDA PARA BANT 4
             const bantData = data.filter(i => i.source === 'BANT4');
-            renderTable('table-body-bant4', bantData, i => `<td>${i.name}</td><td>${i.region}</td><td>${i.phone}</td><td>-</td><td>-</td><td>${i.createdAt}</td><td>${getStatusBadge(i.status)}</td>`);
+            renderTable('table-body-bant4', bantData, i => `<td>${i.name}</td><td>${i.region}</td><td>${i.phone}</td><td>${i.origin}</td><td><span class="st-bant">${i.reason}</span></td><td>${i.createdAt}</td><td>${getStatusBadge(i.status)}</td>`);
             document.getElementById('kpi-bant4-total').innerText = bantData.length;
 
             const convData = data.filter(i => i.source === 'CONVERTED');
