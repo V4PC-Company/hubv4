@@ -429,7 +429,7 @@
             ACAO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=410178243&single=true&output=csv',
             IND: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=1794727193&single=true&output=csv',
             
-            // BANT 4
+            // BANT 4 - LINKS REAIS
             BANT_MAR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=248606401&single=true&output=csv',
             BANT_ABR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=143072328&single=true&output=csv',
             BANT_MAI: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTpMZl1dumtMC9i5o3gDJdpzjrcfHwJtJrNe-JJTMZsWdW1Na9hq5f1mACgleTpzDnLks9PkjyaMEmS/pub?gid=1603044254&single=true&output=csv',
@@ -499,18 +499,25 @@
             const findKey = (keywords) => Object.keys(row).find(k => keywords.some(kw => k.includes(kw)));
             let finalSource = source.startsWith('BANT') ? 'BANT4' : source;
 
-            // 1. NOME COMPLETO - Busca agressiva
-            const nameKey = findKey(['nome completo', 'nome do lead', 'cliente', 'nome fantasia', 'nome', 'lead name', 'full name']);
-            let name = row[nameKey] || row[Object.keys(row)[0]] || 'Sem Nome'; // Fallback: 1ª coluna
+            // 1. NOME (SEGUNDA COLUNA - FIXO)
+            const values = Object.values(row); 
+            // Pega a 2ª coluna (index 1) se existir, senão tenta a 1ª
+            let name = values[1] || values[0] || 'Sem Nome';
 
-            // 2. LOCALIDADE - Tenta juntar Cidade + UF
+            // 2. MASTER/REGIÃO (Busca robusta)
+            const regionKey = Object.keys(row).find(k => 
+                k.includes('master') || k.includes('regia') || k.includes('region') || k.includes('consultor') || k.includes('respons')
+            );
+            let region = row[regionKey] || '-';
+
+            // 3. LOCALIDADE (Combina Cidade + UF)
             const cityKey = findKey(['cidade', 'município', 'local']);
             const ufKey = findKey(['uf', 'estado']);
             let loc = '-';
             if(row[cityKey] && row[ufKey]) loc = `${row[cityKey]} - ${row[ufKey]}`;
             else if(row[cityKey]) loc = row[cityKey];
             else if(row[ufKey]) loc = row[ufKey];
-            if(loc === '-' || loc === 'null') loc = row[findKey(['regiao', 'regional'])] || '-';
+            if(loc === '-' || loc === 'null') loc = region; // Fallback para região
 
             return {
                 source: finalSource,
@@ -521,7 +528,7 @@
                 city: row[cityKey] || '-',
                 uf: row[ufKey] || '-',
                 status: row[findKey(['status', 'fase', 'situação'])] || 'Ativo',
-                region: row[findKey(['master', 'região', 'regional', 'consultor'])] || '-',
+                region: region,
                 origin: row[findKey(['origem'])] || '-', 
                 reason: row[findKey(['motivo', 'encerramento'])] || '-', 
                 createdAt: row[findKey(['data', 'date', 'criado'])] || new Date().toISOString().split('T')[0]
@@ -561,7 +568,6 @@
                 if(source && item.source !== source) return false;
                 if(uf && !item.uf.toUpperCase().includes(uf)) return false;
                 
-                // Filtro Status Exato (se selecionado)
                 if(statusFilter && statusFilter !== 'todos') {
                     if(!String(item.status).toLowerCase().includes(statusFilter)) return false;
                 }
@@ -591,7 +597,7 @@
             const stCounts = {}; 
             data.forEach(i => { 
                 let s = String(i.status).toUpperCase().trim();
-                // LIMPEZA DE STATUS (Remove números soltos, nulos, etc)
+                // LIMPEZA: Remove "5", "null", "-", números
                 if(!s || s==='NULL' || s==='-' || !isNaN(s) || s.length<3) return;
                 if(s.length>20) s=s.substring(0,20)+'...';
                 stCounts[s] = (stCounts[s]||0)+1; 
@@ -604,7 +610,6 @@
         }
 
         function renderViews(data) {
-            // Renderizações por aba
             const p1 = data.filter(i=>['JUL','AGO','SET','OUT','NOV','DEZ'].includes(i.source));
             renderTable('table-body-p1', p1, i=>`<td><span class="tag-source tag-${i.source.toLowerCase()}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.email}</td><td>${i.displayLoc}</td><td>${getStatusBadge(i.status)}</td>`);
             
@@ -617,8 +622,7 @@
             const p4 = data.filter(i=>i.source==='BANT4');
             renderTable('table-body-bant4', p4, i=>`<td>${i.name}</td><td>${i.region}</td><td>${i.phone}</td><td>${i.origin}</td><td><span class="st-bant">${i.reason}</span></td><td>${i.createdAt}</td><td>${getStatusBadge(i.status)}</td>`);
             
-            // Outros...
-            renderTable('table-body-master', data, i=>`<td><span class="tag-source tag-${i.source.toLowerCase().substring(0,3)}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.displayLoc}</td><td>${i.email}</td><td>${getStatusBadge(i.status)}</td>`);
+            renderTable('table-body-master', data, i=>`<td><span class="tag-source tag-${i.source.toLowerCase().substring(0,3)}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.displayLoc}</td><td>${i.email} <br><small style="color:#666">${i.phone}</small></td><td>${getStatusBadge(i.status)}</td>`);
         }
 
         function renderTable(id, data, tpl) {
