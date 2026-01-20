@@ -30,7 +30,7 @@
         .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid var(--cyan); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        #error-log { display: none; margin-top: 20px; padding: 15px; background: #330000; border: 1px solid red; color: #ff9999; font-family: monospace; font-size: 0.7rem; max-width: 80%; word-wrap: break-word; }
+        #error-log { display: none; margin-top: 20px; padding: 15px; background: #330000; border: 1px solid red; color: #ff9999; font-family: monospace; font-size: 0.7rem; max-width: 80%; text-align: left; }
 
         /* SIDEBAR */
         .sidebar { width: 280px; background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; }
@@ -92,7 +92,7 @@
         .summary-title { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; font-family: 'Inter'; letter-spacing: 0.5px; }
         .summary-value { color: #fff; font-size: 2rem; font-family: 'Orbitron'; font-weight: 700; text-shadow: 0 0 15px rgba(255, 255, 255, 0.1); }
 
-        /* DASHBOARD OVERVIEW SPECIFIC */
+        /* DASHBOARD OVERVIEW */
         .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .chart-container { padding: 20px; }
         .chart-row { display: flex; align-items: center; margin-bottom: 12px; font-size: 0.8rem; }
@@ -101,7 +101,7 @@
         .chart-bar-fill { height: 100%; border-radius: 6px; transition: width 1s; }
         .chart-value { width: 40px; text-align: right; color: #fff; font-weight: bold; }
         
-        /* SCALINK STYLES */
+        /* SCALINK */
         .scalink-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .scalink-title { font-size: 1.8rem; font-family: 'Inter'; font-weight: bold; color: white; text-align: center; width: 100%; }
         .scalink-kpi { background: #000; border: 1px solid var(--yellow); border-radius: 6px; padding: 10px 20px; width: 120px; text-align: center; }
@@ -548,9 +548,9 @@
     </main>
 
     <script>
-        // CONFIGURAÇÃO DOS LINKS GOOGLE SHEETS
-        // Usamos proxy para evitar bloqueio CORS no GitHub Pages
-        const PROXY_URL = 'https://api.allorigins.win/raw?url=';
+        // CONFIGURAÇÃO DOS LINKS REAIS
+        // USANDO CORSPROXY.IO PARA MAIOR ESTABILIDADE
+        const PROXY_URL = 'https://corsproxy.io/?';
         const SHEET_URLS = {
             JUL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=772320362&single=true&output=csv',
             AGO: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRHhCGnGZE8orimuTnbCECn7NqqIoYvcGUHo_6g1A8nbLx56sZT572JdEHpg_uSMQJEYE2uKV4_WUAd/pub?gid=401963441&single=true&output=csv',
@@ -586,7 +586,10 @@
             try {
                 const promises = keys.map(async (key) => {
                     loadingText.innerText = `Baixando planilha: ${key}...`;
-                    const finalUrl = PROXY_URL + encodeURIComponent(SHEET_URLS[key]);
+                    // Adiciona timestamp para evitar cache do proxy
+                    const cacheBuster = `&_t=${new Date().getTime()}`;
+                    const finalUrl = PROXY_URL + encodeURIComponent(SHEET_URLS[key] + cacheBuster);
+                    
                     const data = await fetchCSV(finalUrl, key);
                     return data.map(row => normalizeData(row, key));
                 });
@@ -604,13 +607,13 @@
 
             } catch (error) {
                 console.error(error);
-                loadingText.innerText = 'Erro ao carregar. Verifique o log abaixo.';
+                loadingText.innerText = 'Erro ao carregar. Veja o log abaixo.';
                 loadingText.style.color = 'red';
                 document.querySelector('.spinner').style.borderColor = 'red';
                 document.querySelector('.spinner').style.animation = 'none';
                 
                 errorLog.style.display = 'block';
-                errorLog.innerText = `ERRO TÉCNICO: ${error.message}\n\nPossíveis causas:\n1. Bloqueio de rede da empresa (Firewall).\n2. Planilha não está publicada como CSV.\n3. O Proxy (AllOrigins) está instável.`;
+                errorLog.innerText = `ERRO TÉCNICO: ${error.message}\n\nSe o erro for 'Failed to fetch', verifique se os links das planilhas são públicos (Arquivo > Compartilhar > Publicar na Web > CSV).`;
             }
         }
 
@@ -619,6 +622,8 @@
                 const res = await fetch(url);
                 if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
                 const text = await res.text();
+                // Verificação básica se retornou HTML em vez de CSV
+                if(text.trim().startsWith('<!DOCTYPE html>')) throw new Error('O link retornou uma página HTML, não um CSV. Verifique a publicação.');
                 return parseCSV(text);
             } catch (e) { 
                 throw new Error(`Falha em ${key}: ${e.message}`);
@@ -643,7 +648,6 @@
         }
 
         function normalizeData(row, source) {
-            // Busca inteligente de colunas
             const findKey = (keywords) => Object.keys(row).find(k => keywords.some(kw => k.includes(kw)));
             
             return {
@@ -669,7 +673,6 @@
             });
         }
 
-        // --- SISTEMA DE VISUALIZAÇÃO ---
         function switchTab(pageId, btn) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
@@ -692,32 +695,35 @@
             else if (pageId === 'page-converted') { yearGroup.style.display = 'flex'; quarterGroup.style.display = 'flex'; }
         }
 
+        // FUNÇÃO SEGURA PARA PEGAR VALORES DOS FILTROS
+        function getSafeValue(id) {
+            const el = document.getElementById(id);
+            return el ? el.value.toLowerCase() : '';
+        }
+
         function applyFilters() {
-            const search = document.getElementById('inputSearch').value.toLowerCase();
-            const source = document.getElementById('selectSource').value;
-            const uf = document.getElementById('selectUF').value;
-            const cityFilter = document.getElementById('inputCity').value.toLowerCase();
-            const statusFilter = document.getElementById('selectStatus').value.toLowerCase();
-            const masterFilter = document.getElementById('selectMaster').value;
-            const dateStart = document.getElementById('inputDateStart').value;
-            const dateEnd = document.getElementById('inputDateEnd').value;
+            // Usa função segura para evitar crash se o elemento não existir
+            const search = getSafeValue('inputSearch');
+            const source = document.getElementById('selectSource') ? document.getElementById('selectSource').value : ''; // Case sensitive para source
+            const uf = document.getElementById('selectUF') ? document.getElementById('selectUF').value : '';
+            const cityFilter = getSafeValue('inputCity');
+            const statusFilter = getSafeValue('selectStatus');
+            const masterFilter = document.getElementById('selectMaster') ? document.getElementById('selectMaster').value : '';
+            const dateStart = document.getElementById('inputDateStart') ? document.getElementById('inputDateStart').value : '';
+            const dateEnd = document.getElementById('inputDateEnd') ? document.getElementById('inputDateEnd').value : '';
 
             const filtered = masterDB.filter(item => {
-                // Filtro de Data
                 if(dateStart && dateEnd && item.createdAt) {
                     if(item.createdAt < dateStart || item.createdAt > dateEnd) return false;
                 }
                 
-                // Filtro de Texto
                 if(!item.name.toLowerCase().includes(search) && !item.email.toLowerCase().includes(search)) return false;
 
-                // Filtros Padrão
                 if(source && item.source !== source) return false;
                 if(uf && !item.uf.toUpperCase().includes(uf)) return false;
                 if(cityFilter && !item.city.toLowerCase().includes(cityFilter)) return false;
                 if(statusFilter && !String(item.status).toLowerCase().includes(statusFilter)) return false;
 
-                // Filtros Específicos
                 if(masterFilter && !String(item.region).includes(masterFilter)) return false;
 
                 return true;
@@ -727,14 +733,12 @@
             renderOverview(filtered);
         }
 
-        // RENDER FUNCTIONS
         function renderOverview(data) {
             document.getElementById('ov-total').innerText = data.length;
             document.getElementById('ov-active').innerText = data.filter(i => String(i.status).toLowerCase().match(/ativo|implantação/)).length;
             document.getElementById('ov-bant').innerText = data.filter(i => i.source === 'BANT4').length;
             document.getElementById('ov-conv').innerText = data.filter(i => i.source === 'CONVERTED').length;
 
-            // Chart Origem
             const counts = {};
             data.forEach(i => { counts[i.source] = (counts[i.source] || 0) + 1; });
             const chartOrigin = document.getElementById('chart-origin');
@@ -743,7 +747,6 @@
                 return `<div class="chart-row"><div class="chart-label">${key}</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${pct}%; background:var(--cyan);"></div></div><div class="chart-value">${val}</div></div>`;
             }).join('');
 
-            // Chart Status
             const stCounts = {};
             data.forEach(i => { 
                 let s = i.status || 'Outros';
@@ -787,12 +790,10 @@
             document.getElementById('kpi-sca-total').innerText = scaData.length;
             document.getElementById('sca-list-count').innerText = scaData.length;
             
-            // Render Scalink List (Placeholder)
             document.getElementById('scalink-list-body').innerHTML = scaData.map((i, idx) => `
                 <tr style="border-bottom:1px solid #222; font-size:0.75rem;"><td style="padding:10px; width:30px;">${idx+1}.</td><td>${i.name}</td><td style="color:#888;">${i.email}</td><td style="text-align:right;">${i.uf}</td></tr>
             `).join('');
 
-            // Render Master
             renderTable('table-body-master', data, i => `<td><span class="tag-source tag-${i.source.toLowerCase().substring(0,3)}">${i.source}</span></td><td><b>${i.name}</b></td><td>${i.city} - ${i.uf}</td><td>${i.email} <br><small style="color:#666">${i.phone}</small></td><td>${getStatusBadge(i.status)}</td>`);
             document.getElementById('kpi-master-total').innerText = data.length;
         }
@@ -813,7 +814,8 @@
         }
 
         ['inputSearch', 'selectSource', 'selectUF', 'inputCity', 'selectStatus', 'selectMaster', 'selectYear', 'selectQuarter', 'inputDateStart', 'inputDateEnd'].forEach(id => {
-            document.getElementById(id).addEventListener(id.includes('input') ? 'input' : 'change', applyFilters);
+            const el = document.getElementById(id);
+            if(el) el.addEventListener(id.includes('input') ? 'input' : 'change', applyFilters);
         });
     </script>
 </body>
